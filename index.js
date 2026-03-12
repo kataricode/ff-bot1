@@ -628,79 +628,130 @@ if (command === "check") {
   });
 
   try {
-    // ===== API CHECK BAN + INFO =====
-    const res = await fetch(`http://danger-ban-check.vercel.app/bancheck?uid=${uid}`);
-    const text = await res.text();
 
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      throw new Error("API không trả JSON");
+    // ===== API CHECK BAN MỚI =====
+    const res = await fetch(`http://raw.thug4ff.xyz/check?uid=${uid}&key=great`);
+    const data = await res.json();
+
+    if (data.status !== 200 || !data.data) {
+      throw new Error("Không tìm thấy UID");
     }
 
-    const nickname = data.nickname || "N/A";
-    const region = data.region || "N/A";
-    const level = data.level ?? "N/A";
-    const lastLogin = data.lastLoginAt || "N/A";
-    const createAt = data.createAt || "N/A";
-    const isBanned = data.is_banned === "BANNED";
-    const banPeriod = isBanned
-      ? (data.ban_period || "Không rõ thời hạn")
-      : "Không bị cấm";
+    const player = data.data;
 
-    // ===== NỘI DUNG EMBED (FIX THỤT DÒNG) =====
-    const description = isBanned
-      ? 
-`> **Trạng thái:** ⛔ **BỊ CẤM**
-> **Thời hạn ban:** ${banPeriod}
+    const nickname = player.nickname || "N/A";
+    const region = player.region || "N/A";
+    const level = player.level ?? "N/A";
+    const lastLogin = player.last_login || "N/A";
+    const exp = player.exp ?? "N/A";
+
+    const banInfo = player.ban_info || {};
+    const banStatus = player.is_banned;
+
+    let title;
+    let color;
+    let image;
+    let description;
+
+    // ===== TRẠNG THÁI BAN =====
+
+    // ❌ BAN VĨNH VIỄN
+    if (banStatus === 1) {
+
+      title = "⛔ Người chơi bị CẤM VĨNH VIỄN";
+      color = "Red";
+      image = "https://cdn.discordapp.com/attachments/1227567434483896370/1352329253290639370/standard-1.gif";
+
+      description =
+`> **Lí do:** Tài khoản người chơi này đã bị ban vĩnh viễn do sử dụng phần mềm gian lận (pmt3).
 > **Tên:** ${nickname}
 > **UID:** ${uid}
 > **Khu vực:** ${region}
 > **Cấp độ:** ${level}
-> **Ngày tạo:** ${createAt}
-> **Lần đăng nhập cuối:** ${lastLogin}`
-      :
-`> **Trạng thái:** ✅ **AN TOÀN – KHÔNG BỊ CẤM**
+> **EXP:** ${exp}
+> **Thời gian bắt đầu ban:** ${formatTimestamp(banInfo.start_ban)}
+> **Lần đăng nhập cuối:** ${formatTimestamp(lastLogin)}`;
+
+    }
+
+    // ⚠️ BAN TẠM THỜI
+    else if (banStatus === 2) {
+
+      title = "⚠️ Người chơi bị BAN TẠM THỜI";
+      color = "Orange";
+
+      // dùng GIF giống ban
+      image = "https://cdn.discordapp.com/attachments/1227567434483896370/1352329253290639370/standard-1.gif";
+
+      const remainingHours = Math.floor(banInfo.remaining_seconds / 3600);
+
+      description =
+`> **Trạng thái:** Tài khoản đang bị ban tạm thời, không nên log vào khi bị ban id (tạm thời) tránh ban cứ tiếp diễn.
 > **Tên:** ${nickname}
 > **UID:** ${uid}
 > **Khu vực:** ${region}
 > **Cấp độ:** ${level}
-> **Ngày tạo:** ${createAt}
-> **Lần đăng nhập cuối:** ${lastLogin}`;
+> **EXP:** ${exp}
+> **Bắt đầu ban:** ${formatTimestamp(banInfo.start_ban)}
+> **Lần đăng nhập cuối:** ${formatTimestamp(lastLogin)}`;
+> **Thời gian còn lại:** ${remainingHours} giờ
+
+    }
+
+    // ✅ KHÔNG BAN
+    else {
+
+      title = "✅ Người chơi an toàn";
+      color = "Green";
+
+      image = "https://cdn.discordapp.com/attachments/1227567434483896370/1352329253886361610/standard-2.gif";
+
+      description =
+`> **Trạng thái:** Không phát hiện người chơi dùng phần mềm gian lận (pmt3).
+> **Tên:** ${nickname}
+> **UID:** ${uid}
+> **Khu vực:** ${region}
+> **Cấp độ:** ${level}
+> **EXP:** ${exp}
+> **Lần đăng nhập cuối:** ${formatTimestamp(lastLogin)}`;
+
+    }
 
     const embed = new EmbedBuilder()
-      .setTitle(isBanned ? "⛔ Người chơi bị CẤM" : "✅ Người chơi an toàn")
-      .setColor(isBanned ? "Red" : "Green")
+      .setTitle(title)
+      .setColor(color)
       .setDescription(description)
 
-      // 👉 Avatar Discord người dùng (góc phải)
+      // avatar discord góc phải
       .setThumbnail(
         msg.author.displayAvatarURL({ dynamic: true, size: 256 })
       )
 
-      // 👉 GIF minh họa
-      .setImage(
-        isBanned
-          ? "https://cdn.discordapp.com/attachments/1227567434483896370/1352329253290639370/standard-1.gif"
-          : "https://cdn.discordapp.com/attachments/1227567434483896370/1352329253886361610/standard-2.gif"
-      )
+      // gif minh họa
+      .setImage(image)
+
       .setFooter({ text: "Dev: Katari 📌" })
       .setTimestamp();
 
-    await processing.edit({ content: null, embeds: [embed], files: [] });
+    await processing.edit({
+      content: null,
+      embeds: [embed],
+      files: []
+    });
 
   } catch (err) {
+
     console.error(err);
 
     try {
       await processing.edit({
-        content: "🚫 Không thể kiểm tra người chơi!\n> API đang lỗi hoặc không phản hồi.",
+        content: "🚫 Không thể kiểm tra người chơi!\n> API không phản hồi.",
         files: []
       });
     } catch {
-      await msg.channel.send("🚫 Không thể kiểm tra người chơi!\n> API đang lỗi hoặc không phản hồi.");
+      await msg.channel.send("🚫 Không thể kiểm tra người chơi!\n> API không phản hồi.");
     }
+
   }
 }
 // ======= HẾT LỆNH CHECK =======
@@ -2009,25 +2060,28 @@ async function getFullInfoEmbed(uid, user) {
   let data = {};
 
   try {
-    const res = await fetch(`https://ffinfo-mu.vercel.app/player-info?uid=${uid}&region=vn`);
+    const res = await fetch(`http://raw.sukhdaku.qzz.io/player/info?uid=${uid}`);
     if (!res.ok) throw new Error("API info không phản hồi");
     data = await res.json();
   } catch (err) {
-    console.warn("Không lấy được data API mới:", err);
+    console.warn("Không lấy được data API:", err);
   }
 
-  const acc     = data?.AccountInfo || {};
-  const captain = data?.CaptainInfo || {};
-  const clan    = data?.GuildInfo || {};
-  const pet     = data?.PetInfo || {};
-  const profile = data?.AccountProfileInfo || {};
-  const credit  = data?.CreditScoreInfo || {};
-  const social  = data?.SocialInfo || {};
+  // ===== Mapping JSON mới =====
+  const acc     = data?.playerData || {};
+  const clan    = data?.guildInfo || {};
+  const captain = data?.guildOwnerInfo || {};
+  const pet     = data?.petInfo || {};
+  const profile = data?.profileInfo || {};
+  const credit  = data?.creditScoreInfo || {};
+  const social  = data?.socialInfo || {};
+
+  // ===== CẤP PRIME =====
+  const prime = data?.playerData?.primeLevel?.primeLevel?.split(" ")[0] ?? 0;
 
   const color = getRankColor(acc?.rank);
 
-  // ✅ Banner API mới
-  const bannerImg = `https://ffavtarbanner.vercel.app/avatar-banner?uid=${uid}&region=vn`;
+  const bannerImg = `https://em-profile-card.vercel.app/profile?uid=${uid}&t=${Date.now()}`;
 
   const embed = new EmbedBuilder()
     .setColor(color)
@@ -2049,6 +2103,7 @@ async function getFullInfoEmbed(uid, user) {
       `**├─ Cấp độ**: ${acc?.level ?? "not found"} (Exp: ${acc?.exp ?? "not found"})\n` +
       `**├─ Khu vực**: ${acc?.region ?? "not found"}\n` +
       `**├─ Lượt thích**: ${acc?.liked ?? "not found"}\n` +
+      `**├─ Cấp Prime**: ${prime}\n` +
       `**├─ Điểm uy tín**: ${credit?.creditScore ?? "not found"}\n` +
       `**└─ Chữ ký**: ${social?.signature || "not found"}`
   });
@@ -2075,7 +2130,7 @@ async function getFullInfoEmbed(uid, user) {
       `**├─ Banner ID**: ${acc?.bannerId ?? "not found"}\n` +
       `**├─ Pin ID**: ${acc?.pinId ?? "not found"}\n` +
       `**└─ Kỹ năng được trang bị**: [${
-        profile?.equipedSkills?.join(", ") || "not found"
+        profile?.EquippedSkills?.join(", ") || "not found"
       }]`
   });
 
@@ -2107,7 +2162,6 @@ async function getFullInfoEmbed(uid, user) {
         `    **├─ UID**: \`${captain?.accountId ?? "not found"}\`\n` +
         `    **├─ Cấp độ**: ${captain?.level ?? "not found"} (Exp: ${captain?.exp ?? "not found"})\n` +
         `    **├─ Lần đăng nhập gần nhất**: ${formatTimestamp(captain?.lastLoginAt)}\n` +
-        `    **├─ Danh hiệu**: ${captain?.title ?? "not found"}\n` +
         `    **├─ Huy hiệu BP**: ${captain?.badgeCnt ?? "not found"}\n` +
         `    **├─ Rank BR**: ${captain?.rankingPoints ?? "not found"}\n` +
         `    **└─ Rank CS**: ${captain?.csRankingPoints ?? "not found"}`
