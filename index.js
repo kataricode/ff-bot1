@@ -809,7 +809,7 @@ if (command === "visits") {
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
 
     const embed = new EmbedBuilder()
-      .setColor(Green)
+      .setColor(0x00FF00)
       .setTitle("👁️ KẾT QUẢ VISITS")
       .setDescription(
 `> **Tên:** ${nickname}
@@ -1131,7 +1131,7 @@ if (command === "ghost") {
     const teamcode = data.Teamcode || code;
 
     const embed = new EmbedBuilder()
-      .setColor(Green)
+      .setColor("#Green")
       .setTitle("👻 Ghost TeamCode thành công")
       .setDescription(
 `> **Người yêu cầu:** <@${msg.author.id}>
@@ -1221,7 +1221,7 @@ if (command.startsWith("team")) {
         const team = data.Team || teamNumber;
 
         const embed = new EmbedBuilder()
-            .setColor(Green)
+            .setColor(0x00FF00)
             .setTitle(`🎮 Team ${team} đã sẵn sàng`)
             .setDescription(
 `> **Người yêu cầu:** <@${msg.author.id}>
@@ -1405,7 +1405,7 @@ if (command === "emote") {
         const data = await res.json();
 
         const embed = new EmbedBuilder()
-            .setColor(Green)
+            .setColor(0x00FF00)
             .setTitle("🎭 Gửi Emote Thành Công!")
             .setDescription(
                 `> Người dùng: <@${msg.author.id}>\n` +
@@ -1661,7 +1661,7 @@ if (command === "emotes") {
             `${uid6 ? `• ${uid6}\n` : ""}`;
 
         const embed = new EmbedBuilder()
-            .setColor(Green)
+            .setColor("#00FF00")
             .setTitle("🎭 Gửi Emote Thành Công!")
             .setDescription(
                 `> Người dùng: <@${msg.author.id}>\n` +
@@ -1800,7 +1800,7 @@ if (command === "randoms") {
 
         if (!randomsStop) {
             const embed = new EmbedBuilder()
-                .setColor(Green)
+                .setColor("#00FF00")
                 .setTitle("🤖 Auto Emote Hoàn Tất!")
                 .setDescription(
                     `> Team code: **${teamcode}**\n` +
@@ -2000,7 +2000,7 @@ if (command === "search") {
       const bannerImg = `https://card.sukhdaku.qzz.io/api/profile?uid=${uid}`;
 
       const embed = new EmbedBuilder()
-        .setColor(Green)
+        .setColor(0x00FF00)
         .setTitle(`🔎 Kết quả Tìm Kiếm ${index}/${results.length}`)
         .setDescription(
           `> **Tên người chơi:** ${name}\n` +
@@ -2066,7 +2066,7 @@ if (command === "todoi") {
         const data = await res.json();
 
         const embed = new EmbedBuilder()
-            .setColor("Green")
+            .setColor("#00FF00")
             .setTitle("📢 Gửi Tin Nhắn Tổ Đội")
             .setDescription(
 `> **Người yêu cầu:** <@${msg.author.id}>
