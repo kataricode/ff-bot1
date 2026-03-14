@@ -515,6 +515,7 @@ if (command === "katari") {
 
   // ======= LỆNH LIKE =======
 if (command === "like") {
+
   const uid = args[0];
 
   if (!uid || isNaN(uid)) {
@@ -534,23 +535,34 @@ if (command === "like") {
   );
 
   try {
-    const apiUrl = `https://ffcommunityapilvupaya.spcfy.eu/likes?uid=${uid}`;
+
+    const apiUrl = `https://ff.garena.cloud/like?uid=${uid}&server=vn&key=FREE-FIRE-LIKE-API`;
+
     const res = await fetch(apiUrl);
     const data = await res.json();
 
-    const result = data?.result;
+    if (data.success === 1 && data.status === true) {
 
-    // ===== THÀNH CÔNG =====
-    if (result?.API?.Success === true) {
+      const r = data.response;
+
+      const nickname = r.PlayerNickname || "N/A";
+      const level = r.PlayerLevl || "N/A";
+      const region = r.Region || "N/A";
+      const before = r.LikesbeforeCommand || 0;
+      const added = r.LikesGivenByAPI || 0;
+      const after = r.LikesafterCommand || 0;
+
       const embed = new EmbedBuilder()
         .setTitle("✅ BUFF LIKE THÀNH CÔNG")
         .setColor("Green")
         .setDescription(
-          `> **Tên người chơi:** ${result["User Info"]?.["Account Name"] || "Không rõ"}\n` +
-          `> **UID:** ${result["User Info"]?.["Account UID"] || uid}\n` +
-          `> **Like trước:** ${result["Likes Info"]?.["Likes Before"]}\n` +
-          `> **Like thêm:** +${result["Likes Info"]?.["Likes Added"]}\n` +
-          `> **Like sau:** ${result["Likes Info"]?.["Likes After"]}`
+`> **Tên:** ${nickname}
+> **UID:** \`${uid}\`
+> **Khu vực:** ${region}
+> **Cấp độ:** ${level}
+> **Like trước:** ${before}
+> **Like thêm:** +${added}
+> **Like sau:** ${after}`
         )
         .setThumbnail(
           msg.author.displayAvatarURL({ dynamic: true, size: 256 })
@@ -558,30 +570,37 @@ if (command === "like") {
         .setFooter({ text: "DEVELOPED BY KATARI" })
         .setTimestamp();
 
-      await processing.edit({ content: null, embeds: [embed] });
+      await processing.edit({
+        content: null,
+        embeds: [embed]
+      });
 
-    // ===== MAX LIKE / RATE LIMIT =====
     } else {
+
       const errMsg = await processing.edit(
-        "⚠️ UID này đã **MAX LIKE**.\n> Vui lòng quay lại **ngày mai** để buff tiếp."
+        "⚠️ UID này đã **MAX LIKE** hoặc API không thể gửi thêm."
       );
 
       setTimeout(() => {
         errMsg.delete().catch(() => {});
       }, 10000);
+
     }
 
   } catch (err) {
+
     console.error(err);
 
     const errMsg = await processing.edit(
-      "❌ Lỗi kết nối API Like."
+      "❌ Không thể kết nối API Like."
     );
 
     setTimeout(() => {
       errMsg.delete().catch(() => {});
     }, 10000);
+
   }
+
 }
 // ======= HẾT LỆNH LIKE =======
 
