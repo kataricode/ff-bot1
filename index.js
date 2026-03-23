@@ -2582,7 +2582,6 @@ client.login(process.env.TOKEN)
 
 
 // ====== EXPRESS KEEP-ALIVE ======
-const express = require('express');
 const app = express();
 // Render ưu tiên port 10000, nếu không có thì dùng 3000
 const PORT = process.env.PORT || 10000; 
