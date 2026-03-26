@@ -2416,7 +2416,7 @@ async function buffLikeUID(uid) {
 
 }
 
-// ==================== HÀM INFO (API MỚI) ====================
+// ==================== HÀM INFO (API MỚI + BANNER MỚI) ====================
 async function getFullInfoEmbed(uid, user) {
   let data = {};
 
@@ -2428,7 +2428,7 @@ async function getFullInfoEmbed(uid, user) {
     console.warn("Không lấy được data API:", err);
   }
 
-  // ===== Mapping JSON mới =====
+  // ===== Mapping JSON =====
   const acc     = data?.playerData || {};
   const clan    = data?.guildInfo || {};
   const captain = data?.guildOwnerInfo || {};
@@ -2437,16 +2437,28 @@ async function getFullInfoEmbed(uid, user) {
   const credit  = data?.creditScoreInfo || {};
   const social  = data?.socialInfo || {};
 
-  // ===== CẤP PRIME =====
-  const prime = data?.playerData?.primeLevel?.primeLevel?.split(" ")[0] ?? 0;
+  // ===== PRIME =====
+  const prime = acc?.primeLevel?.primeLevel?.split(" ")[0] ?? 0;
 
   const color = getRankColor(acc?.rank);
 
-  const bannerImg = `https://em-profile-card.vercel.app/profile?uid=${uid}`;
+  // ===== FIX TÊN =====
+  const cleanName = acc?.nickname || "Unknown";
 
+  // ===== BANNER API MỚI =====
+  const bannerImg = `https://ff.kibomodz.net/api/v1/profileboard/?password=K180726733`
+    + `&name=${encodeURIComponent(cleanName)}`
+    + `&uid=${acc?.accountId || uid}`
+    + `&level=${acc?.level || 0}`
+    + `&banner=${acc?.bannerId || 0}`
+    + `&avatar=${acc?.headPic || 0}` // ✅ đúng avatar
+    + `&pin=${acc?.pinId || 0}`
+    + `&guild=${clan?.clanId || 0}`;
+
+  // ===== EMBED =====
   const embed = new EmbedBuilder()
     .setColor(color)
-    .setTitle(`🔎 Thông tin người chơi: **${acc?.nickname || uid}**`)
+    .setTitle(`🔎 Thông tin người chơi: **${cleanName}**`)
     .setAuthor({ name: user.username })
     .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
     .setImage(bannerImg)
@@ -2469,17 +2481,17 @@ async function getFullInfoEmbed(uid, user) {
       `**└─ Chữ ký**: ${social?.signature || "not found"}`
   });
 
-  // ===== HOẠT ĐỘNG TÀI KHOẢN =====
+  // ===== HOẠT ĐỘNG =====
   fields.push({
     name: "\u200b",
     value:
       "**┌  HOẠT ĐỘNG TÀI KHOẢN**\n" +
-      `**├─ Phiên bản gần nhất**: ${acc?.releaseVersion ?? "not found"}\n` +
-      `**├─ Huy hiệu BP hiện tại**: ${acc?.badgeCnt ?? "not found"}\n` +
+      `**├─ Phiên bản**: ${acc?.releaseVersion ?? "not found"}\n` +
+      `**├─ Huy hiệu BP**: ${acc?.badgeCnt ?? "not found"}\n` +
       `**├─ Rank BR**: ${acc?.rankingPoints ?? "not found"}\n` +
       `**├─ Rank CS**: ${acc?.csRankingPoints ?? "not found"}\n` +
       `**├─ Ngày tạo**: ${formatTimestamp(acc?.createAt)}\n` +
-      `**└─ Đăng nhập gần nhất**: ${formatTimestamp(acc?.lastLoginAt)}`
+      `**└─ Đăng nhập**: ${formatTimestamp(acc?.lastLoginAt)}`
   });
 
   // ===== TỔNG QUAN =====
@@ -2487,45 +2499,44 @@ async function getFullInfoEmbed(uid, user) {
     name: "\u200b",
     value:
       "**┌  TỔNG QUAN**\n" +
-      `**├─ Avatar ID**: ${profile?.avatarId ?? "not found"}\n` +
+      `**├─ Avatar ID**: ${acc?.headPic ?? "not found"}\n` +
       `**├─ Banner ID**: ${acc?.bannerId ?? "not found"}\n` +
       `**├─ Pin ID**: ${acc?.pinId ?? "not found"}\n` +
-      `**└─ Kỹ năng được trang bị**: [${
+      `**└─ Kỹ năng**: [${
         profile?.EquippedSkills?.join(", ") || "not found"
       }]`
   });
 
-  // ===== THÚ CƯNG =====
+  // ===== PET =====
   if (pet?.id) {
     fields.push({
       name: "\u200b",
       value:
         "**┌  THÚ CƯNG**\n" +
-        `**├─ Đang dùng?**: ${pet?.isSelected ? "Có" : "Không"}\n` +
-        `**├─ ID thú cưng**: ${pet?.id ?? "not found"}\n` +
-        `**├─ Kinh nghiệm**: ${pet?.exp ?? "not found"}\n` +
-        `**└─ Cấp độ**: ${pet?.level ?? "not found"}`
+        `**├─ Đang dùng**: ${pet?.isSelected ? "Có" : "Không"}\n` +
+        `**├─ ID**: ${pet?.id}\n` +
+        `**├─ Exp**: ${pet?.exp}\n` +
+        `**└─ Level**: ${pet?.level}`
     });
   }
 
-  // ===== QUÂN ĐOÀN =====
+  // ===== GUILD =====
   if (clan?.clanId) {
     fields.push({
       name: "\u200b",
       value:
         "**┌  QUÂN ĐOÀN**\n" +
-        `**├─ Tên quân đoàn**: ${clan?.clanName ?? "not found"}\n` +
-        `**├─ ID quân đoàn**: \`${clan?.clanId ?? "not found"}\`\n` +
-        `**├─ Cấp**: ${clan?.clanLevel ?? "not found"}\n` +
-        `**├─ Thành viên**: ${clan?.memberNum ?? "0"}/${clan?.capacity ?? "0"}\n` +
-        "**└─ Thông tin chủ quân đoàn**:\n" +
-        `    **├─ Tên**: ${captain?.nickname ?? "not found"}\n` +
-        `    **├─ UID**: \`${captain?.accountId ?? "not found"}\`\n` +
-        `    **├─ Cấp độ**: ${captain?.level ?? "not found"} (Exp: ${captain?.exp ?? "not found"})\n` +
-        `    **├─ Lần đăng nhập gần nhất**: ${formatTimestamp(captain?.lastLoginAt)}\n` +
-        `    **├─ Huy hiệu BP**: ${captain?.badgeCnt ?? "not found"}\n` +
-        `    **├─ Rank BR**: ${captain?.rankingPoints ?? "not found"}\n` +
-        `    **└─ Rank CS**: ${captain?.csRankingPoints ?? "not found"}`
+        `**├─ Tên**: ${clan?.clanName}\n` +
+        `**├─ ID**: \`${clan?.clanId}\`\n` +
+        `**├─ Cấp**: ${clan?.clanLevel}\n` +
+        `**├─ Thành viên**: ${clan?.memberNum}/${clan?.capacity}\n` +
+        "**└─ Chủ QĐ**:\n" +
+        `    **├─ Tên**: ${captain?.nickname}\n` +
+        `    **├─ UID**: \`${captain?.accountId}\`\n` +
+        `    **├─ Level**: ${captain?.level}\n` +
+        `    **├─ Login**: ${formatTimestamp(captain?.lastLoginAt)}\n` +
+        `    **├─ Rank BR**: ${captain?.rankingPoints}\n` +
+        `    **└─ Rank CS**: ${captain?.csRankingPoints}`
     });
   }
 
