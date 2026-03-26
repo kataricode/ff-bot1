@@ -1275,30 +1275,28 @@ if (command === "ghost") {
    // ===================== LỆNH !TEAM3 / !TEAM4 / !TEAM5 / !TEAM6 =====================
 if (command.startsWith("team")) {
 
-    // ID kênh được phép sử dụng các lệnh team
     const allowedTeamChannel = "1450085637020717117";
 
-    // 1. Kiểm tra xem có đúng kênh cho phép không
+    // ❌ Sai kênh
     if (msg.channel.id !== allowedTeamChannel) {
         const channelWarn = await msg.reply(
             `❌ Các lệnh tạo team chỉ được dùng tại kênh: <#${allowedTeamChannel}>!`
         );
         
-        // Tự động xóa cảnh báo và lệnh sai sau 5 giây
         setTimeout(() => {
             channelWarn.delete().catch(() => {});
             msg.delete().catch(() => {});
         }, 5000);
-        return; // Dừng thực hiện lệnh
+        return;
     }
 
     const teamNumber = command.replace("team", "");
     const uid = args[0];
 
-    // ❌ team không hợp lệ (Nếu gõ !team đơn thuần hoặc !team99 chẳng hạn)
+    // ❌ team không hợp lệ
     if (!["3", "4", "5", "6"].includes(teamNumber)) return;
 
-    // 2. Kiểm tra sai cú pháp UID
+    // ❌ Sai UID
     if (!uid || isNaN(uid)) {
         const errMsg = await msg.reply(
             `> ❌ Sai cú pháp!\n> Ví dụ: \`!team${teamNumber} 12345678\``
@@ -1314,50 +1312,49 @@ if (command.startsWith("team")) {
 
     // ⏳ Loading
     const loadingMsg = await msg.reply(
-        `⏳ **Đang tạo team ${teamNumber}...**\n` +
-        `> Chuẩn bị mời **UID: ${uid}**`
+        `⏳ **Đang tạo team ${teamNumber}...**\n> UID: **${uid}**`
     );
 
     // ✅ API mới
-    const apiUrl = `https://taycommunity.spcfy.eu/creatsquad?uid=${uid}&team=${teamNumber}`;
+    const apiUrl = `https://sikibidifreeeapiteam356.onrender.com/squad/create?size=${teamNumber}&uids=${uid}`;
 
     try {
+
         const res = await fetch(apiUrl);
         if (!res.ok) throw new Error("API lỗi");
 
         const data = await res.json();
 
-        const botName = data.BotName || "N/A";
-        const message = data.Message || "Đã gửi lời mời";
-        const target = data.Target || uid;
-        const team = data.Team || teamNumber;
+        // ❌ API fail
+        if (!data.success) throw new Error("Tạo team thất bại");
 
         const embed = new EmbedBuilder()
             .setColor(0x00FF00)
-            .setTitle(`🎮 Team ${team} đã sẵn sàng`)
+            .setTitle(`🎮 Team ${teamNumber} đã sẵn sàng`)
             .setDescription(
 `> **Người yêu cầu:** <@${msg.author.id}>
-> **UID mục tiêu:** \`${target}\`
-> **Team:** ${team}
-> **Bot mời:** ${botName}
-> 📩 ${message}`
+> **UID:** \`${uid}\`
+> **Team:** ${teamNumber}
+
+> 📩 **Trạng thái:** ${data.message || "Đã gửi lời mời, hãy chấp nhận lời mời"}`
             )
             .setThumbnail(
                 msg.author.displayAvatarURL({ dynamic: true, size: 256 })
             )
-            .setFooter({ text: "Dev Katari x Obiyeuem" })
+            .setFooter({ text: "Dev Katari x Sikibidi" })
             .setTimestamp();
 
         await loadingMsg.edit({
-            content: "✅ **Hoàn tất! Hãy chấp nhận lời mời trong game.**",
+            content: "✅ **Tạo team thành công!**",
             embeds: [embed]
         });
 
     } catch (err) {
+
         console.error(err);
 
         const errMsg = await msg.reply(
-            "❌ **Không thể tạo team. API gặp lỗi hoặc không phản hồi.**"
+            "❌ **Không thể tạo team. API lỗi hoặc không phản hồi.**"
         );
 
         setTimeout(() => {
