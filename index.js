@@ -2416,7 +2416,7 @@ async function buffLikeUID(uid) {
 
 }
 
-// ==================== HÀM INFO (API MỚI + BANNER MỚI) ====================
+// ==================== HÀM INFO (API MỚI + FIX BANNER) ====================
 async function getFullInfoEmbed(uid, user) {
   let data = {};
 
@@ -2441,19 +2441,31 @@ async function getFullInfoEmbed(uid, user) {
   const prime = acc?.primeLevel?.primeLevel?.split(" ")[0] ?? 0;
 
   const color = getRankColor(acc?.rank);
-
-  // ===== FIX TÊN =====
   const cleanName = acc?.nickname || "Unknown";
 
-  // ===== BANNER API MỚI =====
-  const bannerImg = `https://ff.kibomodz.net/api/v1/profileboard/?password=K180726733`
+  // ===== URL GỐC =====
+  const originalUrl = `https://ff.kibomodz.net/api/v1/profileboard/?password=K180726733`
     + `&name=${encodeURIComponent(cleanName)}`
     + `&uid=${acc?.accountId || uid}`
     + `&level=${acc?.level || 0}`
     + `&banner=${acc?.bannerId || 0}`
-    + `&avatar=${acc?.headPic || 0}` // ✅ đúng avatar
+    + `&avatar=${acc?.headPic || 0}`
     + `&pin=${acc?.pinId || 0}`
-    + `&guild=${clan?.clanId || 0}`;
+    + `&guild=${clan?.clanId || 0}`
+    + `&t=${Date.now()}`; // ✅ chống cache
+
+  // ===== CHECK ẢNH (fallback nếu lỗi) =====
+  let bannerImg = originalUrl;
+
+  try {
+    const test = await fetch(originalUrl);
+    if (!test.ok) throw new Error("Ảnh lỗi");
+  } catch {
+    bannerImg = "https://i.imgur.com/4M34hi2.png"; // fallback ảnh
+  }
+
+  // ===== DELAY NHẸ CHO API RENDER =====
+  await new Promise(r => setTimeout(r, 800));
 
   // ===== EMBED =====
   const embed = new EmbedBuilder()
