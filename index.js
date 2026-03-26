@@ -2412,33 +2412,53 @@ async function buffLikeUID(uid) {
 
 }
 
+// ===== delay function =====
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // ==================== HÀM INFO (API MỚI) ====================
 async function getFullInfoEmbed(uid, user) {
-  let data = {};
+  let data;
 
   try {
     const res = await fetch(`http://raw.sukhdaku.qzz.io/player/info?uid=${uid}`);
-    if (!res.ok) throw new Error("API info không phản hồi");
-    data = await res.json();
+    const text = await res.text();
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error("API không trả JSON");
+    }
+
+    if (!data?.playerData) {
+      throw new Error("Không có playerData");
+    }
+
   } catch (err) {
-    console.warn("Không lấy được data API:", err);
+    console.error("Lỗi API INFO:", err);
+
+    return new EmbedBuilder()
+      .setColor("Red")
+      .setDescription("❌ Không thể lấy dữ liệu người chơi!");
   }
 
-  // ===== Mapping JSON mới =====
-  const acc     = data?.playerData || {};
-  const clan    = data?.guildInfo || {};
-  const captain = data?.guildOwnerInfo || {};
-  const pet     = data?.petInfo || {};
-  const profile = data?.profileInfo || {};
-  const credit  = data?.creditScoreInfo || {};
-  const social  = data?.socialInfo || {};
+  // ===== Mapping JSON =====
+  const acc     = data.playerData;
+  const clan    = data.guildInfo || {};
+  const captain = data.guildOwnerInfo || {};
+  const pet     = data.petInfo || {};
+  const profile = data.profileInfo || {};
+  const credit  = data.creditScoreInfo || {};
+  const social  = data.socialInfo || {};
 
-  // ===== CẤP PRIME =====
-  const prime = data?.playerData?.primeLevel?.primeLevel?.split(" ")[0] ?? 0;
+  // ===== PRIME =====
+  const prime = acc?.primeLevel?.primeLevel?.split(" ")[0] ?? 0;
 
   const color = getRankColor(acc?.rank);
 
-  // ===== FIX BANNER API MỚI =====
+  // ✅ DELAY 4 GIÂY TRƯỚC KHI LOAD BANNER
+  await delay(4000);
+
+  // ===== BANNER API (FIX MẤT ẢNH) =====
   const bannerImg = `https://ff.kibomodz.net/api/v1/profileboard/?password=K180726733`
     + `&name=${encodeURIComponent(acc?.nickname || "")}`
     + `&uid=${acc?.accountId || uid}`
@@ -2446,15 +2466,17 @@ async function getFullInfoEmbed(uid, user) {
     + `&banner=${acc?.bannerId || 0}`
     + `&avatar=${acc?.headPic || profile?.avatarId || 0}`
     + `&pin=${acc?.pinId || 0}`
-    + `&guild=${encodeURIComponent(clan?.clanName || "")}`;
+    + `&guild=${encodeURIComponent(clan?.clanName || "")}`
+    + `&t=${Date.now()}`;
 
   const embed = new EmbedBuilder()
     .setColor(color)
     .setTitle(`🔎 Thông tin người chơi: **${acc?.nickname || uid}**`)
     .setAuthor({ name: user.username })
     .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
-    .setImage(bannerImg) // 👈 dùng API mới
-    .setFooter({ text: "Dev: Katari 📌" });
+    .setImage(bannerImg)
+    .setFooter({ text: "Dev: Katari 📌" })
+    .setTimestamp();
 
   const fields = [];
 
@@ -2473,7 +2495,7 @@ async function getFullInfoEmbed(uid, user) {
       `**└─ Chữ ký**: ${social?.signature || "not found"}`
   });
 
-  // ===== HOẠT ĐỘNG TÀI KHOẢN =====
+  // ===== HOẠT ĐỘNG =====
   fields.push({
     name: "\u200b",
     value:
