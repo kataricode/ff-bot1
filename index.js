@@ -1081,30 +1081,29 @@ if (command === "get") {
    // ======= LỆNH SPAM =======
 if (command === "spam") {
 
-    // ID kênh được phép sử dụng lệnh spam
     const allowedSpamChannel = "1450084239201665157";
 
-    // 1. Kiểm tra xem có đúng kênh cho phép không
+    // ❌ Sai kênh
     if (msg.channel.id !== allowedSpamChannel) {
         const channelWarn = await msg.reply(
             `❌ Lệnh này chỉ được dùng tại kênh: <#${allowedSpamChannel}>!`
         );
         
-        // Tự động xóa cảnh báo và lệnh sai sau 5 giây
         setTimeout(() => {
             channelWarn.delete().catch(() => {});
             msg.delete().catch(() => {});
         }, 5000);
-        return; // Dừng thực hiện lệnh
+        return;
     }
 
     const type = args[0]; // sinv / rinv
     const uid = args[1];
+    const amount = args[2] || 50; // ✅ cho phép nhập số lượng
 
-    // 2. Kiểm tra sai cú pháp
-    if (!type || !uid || isNaN(uid)) {
+    // ❌ Sai cú pháp
+    if (!type || !uid || isNaN(uid) || isNaN(amount)) {
         const warn = await msg.reply(
-            "❌ Sai cú pháp!\nVí dụ:\n`!spam sinv 12345678`\n`!spam rinv 12345678`"
+            "❌ Sai cú pháp!\nVí dụ:\n`!spam sinv 12345678 50`\n`!spam rinv 12345678 100`"
         );
 
         setTimeout(() => {
@@ -1114,7 +1113,7 @@ if (command === "spam") {
         return;
     }
 
-    // 3. Kiểm tra type không hợp lệ
+    // ❌ Sai type
     if (!["sinv", "rinv"].includes(type)) {
         const typeWarn = await msg.reply("❌ Type chỉ có `sinv` (team) hoặc `rinv` (room)");
         
@@ -1126,10 +1125,11 @@ if (command === "spam") {
     }
 
     const loadingMsg = await msg.reply(
-        `⏳ Đang spam ${type === "sinv" ? "tổ đội" : "phòng"} cho UID **${uid}**...`
+        `⏳ Đang spam ${type === "sinv" ? "tổ đội" : "phòng"} (${amount}) cho UID **${uid}**...`
     );
 
-    const apiUrl = `https://taycommunity.spcfy.eu/spam?uid=${uid}&type=${type}&sl=50`;
+    // ✅ API mới (có sl)
+    const apiUrl = `https://freefireservice.spcfy.eu/spam?type=${type}&uid=${uid}&sl=${amount}`;
 
     try {
         const res = await fetch(apiUrl);
@@ -1137,15 +1137,21 @@ if (command === "spam") {
 
         const data = await res.json();
 
+        if (!data || !data.Type) throw new Error("Spam thất bại");
+
+        const botName = data.Botname || "N/A";
+        const message = data.Message || "Hoàn tất";
+        const sl = data.Sluong || amount;
+
         const embed = new EmbedBuilder()
             .setColor("#00FF00")
             .setTitle("📨 Spam Thành Công")
             .setDescription(
 `> **UID:** \`${uid}\`
 > **Loại spam:** ${type === "sinv" ? "Spam tổ đội" : "Spam phòng"}
-> **Số lượng:** 50
-> **Bot:** ${data.BotName || "ＷＸＺ.ＯＢＩ┊ＭZPᰔ"}
-> **Trạng thái:** ${data.Message || "Hoàn tất"}`
+> **Số lượng:** ${sl}
+> **Bot:** ${botName}
+> 📩 **Trạng thái:** ${message}`
             )
             .setThumbnail(
                 msg.author.displayAvatarURL({ dynamic: true, size: 256 })
@@ -1163,7 +1169,10 @@ if (command === "spam") {
 
         const errorEmbed = new EmbedBuilder()
             .setColor("#ff0000")
-            .setDescription("> ❌ Không thể kết nối API spam.")
+            .setTitle("❌ Spam thất bại")
+            .setDescription(
+                `> **UID:** ${uid}\n> Không thể kết nối API hoặc API lỗi.`
+            )
             .setFooter({ text: "Dev Katari x Obiyeuem" })
             .setTimestamp();
 
@@ -1178,29 +1187,27 @@ if (command === "spam") {
    // ===================== LỆNH !GHOST =====================
 if (command === "ghost") {
 
-  // ID kênh được phép sử dụng lệnh ghost
   const allowedGhostChannel = "1450085263744434270";
 
-  // 1. Kiểm tra xem có đúng kênh cho phép không
+  // ❌ Sai kênh
   if (msg.channel.id !== allowedGhostChannel) {
     const channelWarn = await msg.reply(
       `❌ Lệnh này chỉ được dùng tại kênh: <#${allowedGhostChannel}>!`
     );
     
-    // Tự động xóa cảnh báo và lệnh sai sau 5 giây
     setTimeout(() => {
       channelWarn.delete().catch(() => {});
       msg.delete().catch(() => {});
     }, 5000);
-    return; // Dừng thực hiện lệnh
+    return;
   }
 
-  const code = args[0];
+  const code = args[0]; // ✅ dùng lại teamcode
 
-  // 2. Kiểm tra sai cú pháp
+  // ❌ Sai cú pháp
   if (!code || isNaN(code)) {
     const msgError = await msg.reply(
-      "> ❌ Sai cú pháp!\n> Ví dụ: `!ghost 1455154`"
+      "> ❌ Sai cú pháp!\n> Ví dụ: `!ghost 1818112`"
     );
 
     setTimeout(() => {
@@ -1216,16 +1223,20 @@ if (command === "ghost") {
   );
 
   try {
-    const url = `https://taycommunity.spcfy.eu/ghost?teamcode=${code}`;
+    // ✅ API đúng
+    const url = `https://freefireservice.spcfy.eu/ghost?teamcode=${code}`;
     const res = await fetch(url);
 
     if (!res.ok) throw new Error("API lỗi");
 
     const data = await res.json();
 
+    // ❌ API fail (không có success)
+    if (!data || !data.Teamcode) throw new Error("Ghost thất bại");
+
     const botName = data.BotName || "N/A";
     const message = data.Message || "Thành công";
-    const teamcode = data.Teamcode || code;
+    const teamcode = data.Teamcode;
 
     const embed = new EmbedBuilder()
       .setColor("#00FF00")
@@ -1233,7 +1244,7 @@ if (command === "ghost") {
       .setDescription(
 `> **Người yêu cầu:** <@${msg.author.id}>
 > **TeamCode:** \`${teamcode}\`
-> **Bot thực hiện:** ${botName}
+> **Bot:** ${botName}
 > 📩 **Trạng thái:** ${message}`
       )
       .setThumbnail(
@@ -1266,7 +1277,6 @@ if (command === "ghost") {
       embeds: [errorEmbed]
     });
 
-    // Xóa thông báo lỗi sau 5 giây để tránh rác kênh
     setTimeout(() => loading.delete().catch(() => {}), 5000);
   }
 }
@@ -1316,7 +1326,7 @@ if (command.startsWith("team")) {
     );
 
     // ✅ API mới
-    const apiUrl = `https://sikibidifreeeapiteam356.onrender.com/squad/create?size=${teamNumber}&uids=${uid}`;
+    const apiUrl = `https://freefireservice.spcfy.eu/creatsquad?team=${teamNumber}&uid=${uid}`;
 
     try {
 
@@ -1325,22 +1335,23 @@ if (command.startsWith("team")) {
 
         const data = await res.json();
 
-        // ❌ API fail
-        if (!data.success) throw new Error("Tạo team thất bại");
+        // ❌ API fail (API này không có success nên check thủ công)
+        if (!data || !data.Team) throw new Error("Tạo team thất bại");
 
         const embed = new EmbedBuilder()
             .setColor(0x00FF00)
-            .setTitle(`🎮 Team ${teamNumber} đã sẵn sàng`)
+            .setTitle(`🎮 Team ${data.Team} đã sẵn sàng`)
             .setDescription(
 `> **Người yêu cầu:** <@${msg.author.id}>
 > **UID:** \`${uid}\`
-> **Team:** ${teamNumber}
-> 📩 **Trạng thái:** ${data.message || "Đã gửi lời mời, hãy chấp nhận lời mời"}`
+> **Team:** ${data.Team}
+> **Bot:** ${data.BotName || "Không rõ"}
+> 📩 **Trạng thái:** ${data.Message || "Đã gửi lời mời vui lòng chấp nhận"}`
             )
             .setThumbnail(
                 msg.author.displayAvatarURL({ dynamic: true, size: 256 })
             )
-            .setFooter({ text: "Dev Katari x Sikibidi" })
+            .setFooter({ text: "Dev Katari x Obiyeuem" })
             .setTimestamp();
 
         await loadingMsg.edit({
