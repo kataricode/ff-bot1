@@ -2159,7 +2159,7 @@ if (command === "search") {
   }
 
   const loading = await msg.reply(
-    `🔍 Đang tìm người chơi **${nickname}** tại khu vực **${region.toUpperCase()}**...`
+    `🔍 Đang tìm những người chơi cùng tên **${nickname}** tại khu vực **${region.toUpperCase()}**...`
   );
 
   try {
@@ -2277,7 +2277,7 @@ if (command === "todoi") {
         `💬 Đang gửi tin nhắn vào tổ đội...\n> TeamCode: **${teamcode}**`
     );
 
-    const apiUrl = `https://taycommunity.spcfy.eu/msg?teamcode=${teamcode}&message=${encodeURIComponent(message)}`;
+    const apiUrl = `https://freefireservice.spcfy.eu/msg?teamcode=${teamcode}&message=${encodeURIComponent(message)}`;
 
     try {
         const res = await fetch(apiUrl);
