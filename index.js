@@ -2429,7 +2429,7 @@ async function getFullInfoEmbed(uid, user) {
   let data = {};
 
   try {
-    const res = await fetch(`http://raw.sukhdaku.qzz.io/player/info?uid=${uid}`);
+    const res = await fetch(`http://raw.sukhdaku.qzz.io/info/?uid=${uid}`);
     if (!res.ok) throw new Error("API info không phản hồi");
     data = await res.json();
   } catch (err) {
