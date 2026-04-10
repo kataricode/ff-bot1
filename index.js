@@ -2456,7 +2456,7 @@ async function getFullInfoEmbed(uid, user) {
 
   // ===== API BANNER MỚI =====
   // Cấu trúc: https://banner-apibykala-api.vercel.app/profile?avatar_id=&banner_id=&pin_id=&prime_level=&level=&name=&guild=
-  const bannerImg = `https://banner-apibykala-api.vercel.app/profile?avatar_id=${avatarId}&banner_id=${bannerId}&pin_id=${pinId}&prime_level=${primeLevel}&level=${level}&name=${name}&guild=${guildName}`;
+  const bannerImg = `https://banner-apibykala-api.vercel.app/profile?avatar_id=${avatarId}&banner_id=${bannerId}&pin_id=${pinId}&prime_level=${primeLevel}&level=${level}&name=${name}&guild=${guildName}&ignore=.png`;
 
   const color = getRankColor(profile?.BrRankPoint);
 
