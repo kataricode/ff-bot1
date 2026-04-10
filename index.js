@@ -2423,7 +2423,7 @@ async function buffLikeUID(uid) {
 
 }
 
-// ==================== HÀM INFO (API MỚI V2) ====================
+// ==================== HÀM INFO (CẬP NHẬT API BANNER MỚI) ====================
 async function getFullInfoEmbed(uid, user) {
   let data = {};
 
@@ -2445,18 +2445,27 @@ async function getFullInfoEmbed(uid, user) {
   const clan    = data?.GuildInfo || {};
   const captain = data?.GuildOwnerInfo || {};
 
-  const prime = captain?.primeLevel?.primeLevel ?? 0;
+  // Lấy các thông số cần thiết cho API Banner
+  const avatarId   = equip?.EquippedAvatarId ?? "";
+  const bannerId   = equip?.EquippedBannerId ?? "";
+  const pinId      = captain?.pinId ?? ""; // Hoặc data?.EquippedItemsInfo?.EquippedPinId tùy API
+  const primeLevel = captain?.primeLevel?.primeLevel ?? 0;
+  const level      = acc?.AccountLevel ?? 0;
+  const name       = encodeURIComponent(acc?.AccountName || "");
+  const guildName  = encodeURIComponent(clan?.GuildName || "");
+
+  // ===== API BANNER MỚI =====
+  // Cấu trúc: https://banner-apibykala-api.vercel.app/profile?avatar_id=&banner_id=&pin_id=&prime_level=&level=&name=&guild=
+  const bannerImg = `https://banner-apibykala-api.vercel.app/profile?avatar_id=${avatarId}&banner_id=${bannerId}&pin_id=${pinId}&prime_level=${primeLevel}&level=${level}&name=${name}&guild=${guildName}`;
 
   const color = getRankColor(profile?.BrRankPoint);
-
-  const bannerImg = `https://ffavtarbanner.vercel.app/avatar-banner?uid=${uid}&region=vn`;
 
   const embed = new EmbedBuilder()
     .setColor(color)
     .setTitle(`🔎 Thông tin người chơi: **${acc?.AccountName || uid}**`)
     .setAuthor({ name: user.username })
     .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
-    .setImage(bannerImg)
+    .setImage(bannerImg) // Sử dụng API banner mới ở đây
     .setFooter({ text: "Dev: Katari 📌" });
 
   const fields = [];
@@ -2471,7 +2480,7 @@ async function getFullInfoEmbed(uid, user) {
       `**├─ Cấp độ**: ${acc?.AccountLevel ?? "not found"} (Exp: ${acc?.AccountEXP ?? "not found"})\n` +
       `**├─ Khu vực**: ${acc?.AccountRegion ?? "not found"}\n` +
       `**├─ Lượt thích**: ${acc?.AccountLikes ?? "not found"}\n` +
-      `**├─ Cấp prime**: ${prime}\n` +
+      `**├─ Cấp prime**: ${primeLevel}\n` +
       `**├─ Điểm uy tín**: ${credit?.creditScore ?? "not found"}\n` +
       `**└─ Chữ ký**: ${social?.signature || "not found"}`
   });
@@ -2494,9 +2503,9 @@ async function getFullInfoEmbed(uid, user) {
     name: "\u200b",
     value:
       "**┌  TỔNG QUAN**\n" +
-      `**├─ Avatar ID**: ${equip?.EquippedAvatarId ?? "not found"}\n` +
-      `**├─ Banner ID**: ${equip?.EquippedBannerId ?? "not found"}\n` +
-      `**├─ Pin ID**: ${captain?.pinId ?? "not found"}\n` +
+      `**├─ Avatar ID**: ${avatarId || "not found"}\n` +
+      `**├─ Banner ID**: ${bannerId || "not found"}\n` +
+      `**├─ Pin ID**: ${pinId || "not found"}\n` +
       `**└─ Kỹ năng được trang bị**: [${
         equip?.EquippedSkills?.join(", ") || "not found"
       }]`
