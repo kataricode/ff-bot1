@@ -2422,7 +2422,7 @@ async function buffLikeUID(uid) {
 }
 
 // ==================== HÀM BỔ TRỢ (CHUYỂN ĐỔI THỜI GIAN) ====================
-function formatTimestamp(timestamp) {
+function formatTimestampV2(timestamp) {
   if (!timestamp || timestamp === "0") return "not found";
   // Chuyển từ giây sang milisecond để format
   const date = new Date(parseInt(timestamp) * 1000);
@@ -2500,8 +2500,8 @@ async function getFullInfoEmbed(uid, user) {
       `**├─ Huy hiệu BP hiện tại**: ${basic?.badgecnt ?? "not found"}\n` +
       `**├─ Rank BR**: ${basic?.rankingpoints ?? "not found"}\n` +
       `**├─ Rank CS**: ${basic?.csrankingpoints ?? "not found"}\n` +
-      `**├─ Ngày tạo**: ${formatTimestampv2(basic?.createat)}\n` +
-      `**└─ Đăng nhập gần nhất**: ${formatTimestampv2(basic?.lastloginat)}`
+      `**├─ Ngày tạo**: ${formatTimestampV2(basic?.createat)}\n` +
+      `**└─ Đăng nhập gần nhất**: ${formatTimestampV2(basic?.lastloginat)}`
   });
 
   // ===== TỔNG QUAN =====
@@ -2544,7 +2544,7 @@ async function getFullInfoEmbed(uid, user) {
         `    **├─ Tên**: ${captain?.nickname ?? "not found"}\n` +
         `    **├─ UID**: \`${captain?.accountid ?? "not found"}\`\n` +
         `    **├─ Cấp độ**: ${captain?.level ?? "not found"} (Exp: ${captain?.exp ?? "not found"})\n` +
-        `    **├─ Lần đăng nhập gần nhất**: ${formatTimestampv2(captain?.lastloginat)}\n` +
+        `    **├─ Lần đăng nhập gần nhất**: ${formatTimestampV2(captain?.lastloginat)}\n` +
         `    **├─ Huy hiệu BP**: ${captain?.badgecnt ?? "not found"}\n` +
         `    **├─ Rank BR**: ${captain?.rankingpoints ?? "not found"}\n` +
         `    **└─ Rank CS**: ${captain?.csrankingpoints ?? "not found"}`
