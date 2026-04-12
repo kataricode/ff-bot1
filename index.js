@@ -644,7 +644,6 @@ if (command === "info") {
 
   const processing = await msg.reply({
     content: `⏳ Đang lấy thông tin người chơi **${uid}**...`,
-    files: [loadingGIF],
   });
 
   const start = Date.now();
@@ -652,7 +651,6 @@ if (command === "info") {
   try {
     const embed = await getFullInfoEmbed(uid, msg.author);
     const elapsed = ((Date.now() - start) / 1000).toFixed(2);
-    embed.addFields({ name: "⏱️ Thời gian xử lý", value: `${elapsed}s`, inline: true });
 
     // Gửi embed text
     await processing.edit({ content: null, embeds: [embed], files: [] });
