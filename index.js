@@ -2445,18 +2445,11 @@ async function getFullInfoEmbed(uid, user) {
   const clan    = data?.GuildInfo || {};
   const captain = data?.GuildOwnerInfo || {};
 
-  // Lấy các thông số cần thiết cho API Banner
-  const avatarId   = equip?.EquippedAvatarId ?? "";
-  const bannerId   = equip?.EquippedBannerId ?? "";
-  const pinId      = captain?.pinId ?? ""; // Hoặc data?.EquippedItemsInfo?.EquippedPinId tùy API
   const primeLevel = captain?.primeLevel?.primeLevel ?? 0;
-  const level      = acc?.AccountLevel ?? 0;
-  const name       = encodeURIComponent(acc?.AccountName || "");
-  const guildName  = encodeURIComponent(clan?.GuildName || "");
 
-  // ===== API BANNER MỚI =====
-  // Cấu trúc: https://banner-apibykala-api.vercel.app/profile?avatar_id=&banner_id=&pin_id=&prime_level=&level=&name=&guild=
-  const bannerImg = `https://banner-apibykala-api.vercel.app/profile?avatar_id=${avatarId}&banner_id=${bannerId}&pin_id=${pinId}&prime_level=${primeLevel}&level=${level}&name=${name}&guild=${guildName}`;
+  // ===== API BANNER MỚI (Không cần data từ info) =====
+  // Cấu trúc: http://raw.sukhdaku.eu.cc/profile/profile?uid=
+  const bannerImg = `http://raw.sukhdaku.eu.cc/profile/profile?uid=${uid}`;
 
   const color = getRankColor(profile?.BrRankPoint);
 
@@ -2503,9 +2496,9 @@ async function getFullInfoEmbed(uid, user) {
     name: "\u200b",
     value:
       "**┌  TỔNG QUAN**\n" +
-      `**├─ Avatar ID**: ${avatarId || "not found"}\n` +
-      `**├─ Banner ID**: ${bannerId || "not found"}\n` +
-      `**├─ Pin ID**: ${pinId || "not found"}\n` +
+      `**├─ Avatar ID**: ${equip?.EquippedAvatarId ?? "not found"}\n` +
+      `**├─ Banner ID**: ${equip?.EquippedBannerId ?? "not found"}\n` +
+      `**├─ Pin ID**: ${captain?.pinId ?? "not found"}\n` +
       `**└─ Kỹ năng được trang bị**: [${
         equip?.EquippedSkills?.join(", ") || "not found"
       }]`
