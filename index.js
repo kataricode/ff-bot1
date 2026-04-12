@@ -2487,7 +2487,7 @@ async function getFullInfoEmbed(uid, user) {
       `**├─ Khu vực**: ${basic?.region ?? "not found"}\n` +
       `**├─ Lượt thích**: ${basic?.liked ?? "not found"}\n` +
       `**├─ Điểm uy tín**: ${credit?.creditscore ?? "not found"}\n` +
-      `**└─ Chữ ký**: ${social?.signature || "not found"}`
+      `**└─ Tiểu sử**: ${social?.signature || "not found"}`
   });
 
   // ===== HOẠT ĐỘNG TÀI KHOẢN (Đã sửa format ngày tháng) =====
@@ -2537,8 +2537,8 @@ async function getFullInfoEmbed(uid, user) {
         "**┌  QUÂN ĐOÀN**\n" +
         `**├─ Tên quân đoàn**: ${clan?.clanname ?? "not found"}\n` +
         `**├─ ID quân đoàn**: \`${clan?.clanid ?? "not found"}\`\n` +
-        `**├─ Cấp**: ${clan?.clanlevel ?? "not found"}\n` +
-        `**├─ Thành viên**: ${clan?.membernum ?? "0"}/${clan?.capacity ?? "0"}\n` +
+        `**├─ Cấp quân đoàn**: ${clan?.clanlevel ?? "not found"}\n` +
+        `**├─ Tổng thành viên hiện tại**: ${clan?.membernum ?? "0"}/${clan?.capacity ?? "0"}\n` +
         "**└─ Thông tin chủ quân đoàn**:\n" +
         `    **├─ Tên**: ${captain?.nickname ?? "not found"}\n` +
         `    **├─ UID**: \`${captain?.accountid ?? "not found"}\`\n` +
