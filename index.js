@@ -656,7 +656,7 @@ if (command === "info") {
     await processing.edit({ content: null, embeds: [embed], files: [] });
 
     // ✅ Outfit API mới (KHÔNG sửa gì khác)
-    const outfitImg = `https://outfit.sukhdaku.qzz.io/api/v1/profile?uid=${uid}&bg=3`;
+    const outfitImg = `https://free-fire-outfit-maker90x.vercel.app/?uid=${uid}&region=vn&api_key=sumu90n`;
     await msg.channel.send({
       embeds: [{ image: { url: outfitImg } }]
     });
@@ -693,7 +693,6 @@ if (command === "check") {
 
   const processing = await msg.reply({
     content: `🔍 Đang kiểm tra UID **${uid}**...`,
-    files: [loadingGIF]
   });
 
   try {
