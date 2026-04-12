@@ -2423,32 +2423,50 @@ async function buffLikeUID(uid) {
 
 }
 
-// ==================== HÀM INFO (CẬP NHẬT API MỚI) ====================
+// ==================== HÀM BỔ TRỢ (CHUYỂN ĐỔI THỜI GIAN) ====================
+function formatTimestamp(timestamp) {
+  if (!timestamp || timestamp === "0") return "not found";
+  // Chuyển từ giây sang milisecond để format
+  const date = new Date(parseInt(timestamp) * 1000);
+  if (isNaN(date.getTime())) return "not found";
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds} VNT`;
+}
+
+// ==================== HÀM INFO (FULL ĐÃ SỬA) ====================
 async function getFullInfoEmbed(uid, user) {
   let data = {};
 
   try {
-    // Gọi API mới
+    // Gọi API info mới
     const res = await fetch(`https://sulav-info-tools.vercel.app/info?uid=${uid}`);
     if (!res.ok) throw new Error("API info không phản hồi");
     const json = await res.json();
-    data = json.data; // Lưu ý: API mới bao bọc dữ liệu trong thuộc tính "data"
+    data = json.data || {}; 
   } catch (err) {
     console.warn("Không lấy được data API:", err);
   }
 
-  // ===== Mapping JSON mới =====
+  // ===== Mapping dữ liệu từ JSON mới =====
   const basic   = data?.basicinfo || {};
   const profile = data?.profileinfo || {};
   const pet     = data?.petinfo || {};
   const credit  = data?.creditscoreinfo || {};
   const clan    = data?.clanbasicinfo || {};
   const captain = data?.captainbasicinfo || {};
+  const social  = data?.socialinfo || {}; // Lấy socialinfo để hiện chữ ký
 
-  // URL API Banner (giữ nguyên yêu cầu)
+  // API Banner mới chỉ dùng UID
   const bannerImg = `http://raw.sukhdaku.eu.cc/profile/profile?uid=${uid}`;
 
-  // Màu sắc dựa trên Rank BR
+  // Màu sắc theo Rank BR (rankingpoints)
   const color = getRankColor(basic?.rankingpoints);
 
   const embed = new EmbedBuilder()
@@ -2461,7 +2479,7 @@ async function getFullInfoEmbed(uid, user) {
 
   const fields = [];
 
-  // ===== THÔNG TIN CƠ BẢN =====
+  // ===== THÔNG TIN CƠ BẢN (Đã sửa chữ ký & bỏ Prime) =====
   fields.push({
     name: "\u200b",
     value:
@@ -2472,10 +2490,10 @@ async function getFullInfoEmbed(uid, user) {
       `**├─ Khu vực**: ${basic?.region ?? "not found"}\n` +
       `**├─ Lượt thích**: ${basic?.liked ?? "not found"}\n` +
       `**├─ Điểm uy tín**: ${credit?.creditscore ?? "not found"}\n` +
-      `**└─ Chữ ký**: ${basic?.signature || "not found"}`
+      `**└─ Chữ ký**: ${social?.signature || "not found"}`
   });
 
-  // ===== HOẠT ĐỘNG TÀI KHOẢN =====
+  // ===== HOẠT ĐỘNG TÀI KHOẢN (Đã sửa format ngày tháng) =====
   fields.push({
     name: "\u200b",
     value:
@@ -2484,8 +2502,8 @@ async function getFullInfoEmbed(uid, user) {
       `**├─ Huy hiệu BP hiện tại**: ${basic?.badgecnt ?? "not found"}\n` +
       `**├─ Rank BR**: ${basic?.rankingpoints ?? "not found"}\n` +
       `**├─ Rank CS**: ${basic?.csrankingpoints ?? "not found"}\n` +
-      `**├─ Ngày tạo**: ${basic?.createat ?? "not found"}\n` +
-      `**└─ Đăng nhập gần nhất**: ${basic?.lastloginat ?? "not found"}`
+      `**├─ Ngày tạo**: ${formatTimestamp(basic?.createat)}\n` +
+      `**└─ Đăng nhập gần nhất**: ${formatTimestamp(basic?.lastloginat)}`
   });
 
   // ===== TỔNG QUAN =====
@@ -2495,7 +2513,7 @@ async function getFullInfoEmbed(uid, user) {
       "**┌  TỔNG QUAN**\n" +
       `**├─ Avatar ID**: ${basic?.headpic ?? "not found"}\n` +
       `**├─ Banner ID**: ${basic?.bannerid ?? "not found"}\n` +
-      `**├─ Pin ID**: ${captain?.badgeid ?? "not found"}\n` +
+      `**├─ Pin ID**: ${basic?.badgeid ?? "not found"}\n` +
       `**└─ Kỹ năng được trang bị**: [${
         profile?.equipedskills?.join(", ") || "not found"
       }]`
@@ -2528,7 +2546,7 @@ async function getFullInfoEmbed(uid, user) {
         `    **├─ Tên**: ${captain?.nickname ?? "not found"}\n` +
         `    **├─ UID**: \`${captain?.accountid ?? "not found"}\`\n` +
         `    **├─ Cấp độ**: ${captain?.level ?? "not found"} (Exp: ${captain?.exp ?? "not found"})\n` +
-        `    **├─ Lần đăng nhập gần nhất**: ${captain?.lastloginat ?? "not found"}\n` +
+        `    **├─ Lần đăng nhập gần nhất**: ${formatTimestamp(captain?.lastloginat)}\n` +
         `    **├─ Huy hiệu BP**: ${captain?.badgecnt ?? "not found"}\n` +
         `    **├─ Rank BR**: ${captain?.rankingpoints ?? "not found"}\n` +
         `    **└─ Rank CS**: ${captain?.csrankingpoints ?? "not found"}`
