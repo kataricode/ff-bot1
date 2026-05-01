@@ -1795,7 +1795,7 @@ if (command === "emotes") {
 
     // ================= API EMOTE NHIỀU NGƯỜI =================
     const apiUrl =
-        `https://emote-api-xhi9.onrender.com/join` +
+        `https://tracks-basics-tear-numeric.trycloudflare.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid1}` +
         `${uid2 ? `&uid2=${uid2}` : ""}` +
@@ -1981,7 +1981,7 @@ if (command === "randoms") {
 
             // ✅ API MỚI (Xây dựng URL động dựa trên số lượng UID)
             const apiUrl =
-                `https://emote-api-xhi9.onrender.com/join` +
+                `https://tracks-basics-tear-numeric.trycloudflare.com/join` +
                 `?tc=${teamcode}` +
                 uidList.map((uid, i) => `&uid${i + 1}=${uid}`).join("") +
                 `&emote_id=${emoteId}`;
