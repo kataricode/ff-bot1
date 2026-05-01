@@ -1529,7 +1529,7 @@ if (command === "emote") {
 
     // 🔥 API EMOTE MỚI
     const apiUrl =
-        `https://emote-api-xhi9.onrender.com/join` +
+        `https://tracks-basics-tear-numeric.trycloudflare.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid}` +
         `&emote_id=${emoteId}`;
@@ -1706,7 +1706,7 @@ if (command === "random") {
             );
 
             const apiUrl =
-                `https://emote-api-xhi9.onrender.com/join` +
+                `https://tracks-basics-tear-numeric.trycloudflare.com/join` +
                 `?tc=${teamcode}&uid1=${uid}&emote_id=${emoteId}`;
 
             await fetch(apiUrl);
