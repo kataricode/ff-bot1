@@ -1322,8 +1322,8 @@ if (command.startsWith("team")) {
         `⏳ **Đang tạo team ${teamNumber}...**\n> UID: **${uid}**`
     );
 
-    // ✅ API mới
-    const apiUrl = `https://freefireservice.spcfy.eu/creatsquad?team=${teamNumber}&uid=${uid}`;
+    // ✅ API MỚI (Cloudflare)
+    const apiUrl = `https://span-aside-rats-broad.trycloudflare.com/${teamNumber}?uid=${uid}`;
 
     try {
 
@@ -1332,23 +1332,26 @@ if (command.startsWith("team")) {
 
         const data = await res.json();
 
-        // ❌ API fail (API này không có success nên check thủ công)
-        if (!data || !data.Team) throw new Error("Tạo team thất bại");
+        // ❌ nếu không có message coi như fail
+        if (!data || !data.message) throw new Error("Tạo team thất bại");
+
+        // ✨ sửa bot name
+        const fixedStatus = data.status?.replace("bot by mafu", "bot by katari");
 
         const embed = new EmbedBuilder()
             .setColor(0x00FF00)
-            .setTitle(`🎮 Team ${data.Team} đã sẵn sàng`)
+            .setTitle(`🎮 Team ${teamNumber} đã sẵn sàng`)
             .setDescription(
 `> **Người yêu cầu:** <@${msg.author.id}>
 > **UID:** \`${uid}\`
-> **Team:** ${data.Team}
-> **Bot:** ${data.BotName || "Không rõ"}
-> 📩 **Trạng thái:** ${data.Message || "Đã gửi lời mời vui lòng chấp nhận"}`
+> **Team:** ${teamNumber}
+> **Bot:** ${fixedStatus || "bot by katari"}
+> 📩 **Trạng thái:** ${data.message}`
             )
             .setThumbnail(
                 msg.author.displayAvatarURL({ dynamic: true, size: 256 })
             )
-            .setFooter({ text: "Dev Katari x Obiyeuem" })
+            .setFooter({ text: "Dev Katari" })
             .setTimestamp();
 
         await loadingMsg.edit({
