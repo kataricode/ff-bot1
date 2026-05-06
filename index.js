@@ -1323,7 +1323,7 @@ if (command.startsWith("team")) {
     );
 
     // ✅ API MỚI (Cloudflare)
-    const apiUrl = `https://detailed-organisation-arts-cube.trycloudflare.com/${teamNumber}?uid=${uid}`;
+    const apiUrl = `https://def-obvious-trainer-necessary.trycloudflare.com/${teamNumber}?uid=${uid}`;
 
     try {
 
@@ -1532,7 +1532,7 @@ if (command === "emote") {
 
     // 🔥 API EMOTE MỚI
     const apiUrl =
-        `https://professor-chem-data-ist.trycloudflare.com/join` +
+        `https://collins-abilities-capability-regards.trycloudflare.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid}` +
         `&emote_id=${emoteId}`;
@@ -1709,7 +1709,7 @@ if (command === "random") {
             );
 
             const apiUrl =
-                `https://professor-chem-data-ist.trycloudflare.com/join` +
+                `https://collins-abilities-capability-regards.trycloudflare.com/join` +
                 `?tc=${teamcode}&uid1=${uid}&emote_id=${emoteId}`;
 
             await fetch(apiUrl);
@@ -1798,7 +1798,7 @@ if (command === "emotes") {
 
     // ================= API EMOTE NHIỀU NGƯỜI =================
     const apiUrl =
-        `https://professor-chem-data-ist.trycloudflare.com/join` +
+        `https://collins-abilities-capability-regards.trycloudflare.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid1}` +
         `${uid2 ? `&uid2=${uid2}` : ""}` +
@@ -1984,7 +1984,7 @@ if (command === "randoms") {
 
             // ✅ API MỚI (Xây dựng URL động dựa trên số lượng UID)
             const apiUrl =
-                `https://professor-chem-data-ist.trycloudflare.com/join` +
+                `https://collins-abilities-capability-regards.trycloudflare.com/join` +
                 `?tc=${teamcode}` +
                 uidList.map((uid, i) => `&uid${i + 1}=${uid}`).join("") +
                 `&emote_id=${emoteId}`;
