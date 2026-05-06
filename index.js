@@ -2446,7 +2446,7 @@ async function getFullInfoEmbed(uid, user) {
 
   try {
     // Gọi API info mới
-    const res = await fetch(`https://katariinfo-api.onrender.com/player-info?region=VN&uid=${uid}`);
+    const res = await fetch(`https://demonstrates-prep-automobiles-blend.trycloudflare.com/uc-info?uid=${uid}&key=KatarixInfo`);
     if (!res.ok) throw new Error("API info không phản hồi");
     data = await res.json(); 
   } catch (err) {
