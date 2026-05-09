@@ -1287,7 +1287,7 @@ if (command.startsWith("team")) {
     // ❌ Sai kênh
     if (msg.channel.id !== allowedTeamChannel) {
         const channelWarn = await msg.reply(
-            `❌ Các lệnh tạo team chỉ được dùng tại kênh: <#${allowedTeamChannel}>!`
+            `❌ Lệnh tạo team chỉ được dùng tại kênh: <#${allowedTeamChannel}>!`
         );
         
         setTimeout(() => {
@@ -1323,7 +1323,7 @@ if (command.startsWith("team")) {
     );
 
     // ✅ API MỚI (Cloudflare)
-    const apiUrl = `https://highs-pan-campus-astronomy.trycloudflare.com/${teamNumber}?uid=${uid}`;
+    const apiUrl = `https://peter-days-resulted-longest.trycloudflare.com/${teamNumber}?uid=${uid}`;
 
     try {
 
@@ -1532,7 +1532,7 @@ if (command === "emote") {
 
     // 🔥 API EMOTE MỚI
     const apiUrl =
-        `https://sheep-charlotte-physicians-takes.trycloudflare.com/join` +
+        `https://wall-sarah-gods-historic.trycloudflare.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid}` +
         `&emote_id=${emoteId}`;
@@ -1709,7 +1709,7 @@ if (command === "random") {
             );
 
             const apiUrl =
-                `https://sheep-charlotte-physicians-takes.trycloudflare.com/join` +
+                `https://wall-sarah-gods-historic.trycloudflare.com/join` +
                 `?tc=${teamcode}&uid1=${uid}&emote_id=${emoteId}`;
 
             await fetch(apiUrl);
@@ -1798,7 +1798,7 @@ if (command === "emotes") {
 
     // ================= API EMOTE NHIỀU NGƯỜI =================
     const apiUrl =
-        `https://sheep-charlotte-physicians-takes.trycloudflare.com/join` +
+        `https://wall-sarah-gods-historic.trycloudflare.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid1}` +
         `${uid2 ? `&uid2=${uid2}` : ""}` +
@@ -1984,7 +1984,7 @@ if (command === "randoms") {
 
             // ✅ API MỚI (Xây dựng URL động dựa trên số lượng UID)
             const apiUrl =
-                `https://sheep-charlotte-physicians-takes.trycloudflare.com/join` +
+                `https://wall-sarah-gods-historic.trycloudflare.com/join` +
                 `?tc=${teamcode}` +
                 uidList.map((uid, i) => `&uid${i + 1}=${uid}`).join("") +
                 `&emote_id=${emoteId}`;
@@ -2446,7 +2446,7 @@ async function getFullInfoEmbed(uid, user) {
 
   try {
     // Gọi API info mới
-    const res = await fetch(`https://vehicle-fiction-bluetooth-headset.trycloudflare.com/uc-info?uid=${uid}&key=KatarixInfo`);
+    const res = await fetch(`https://shareholders-exemption-coupled-camera.trycloudflare.com/uc-info?uid=${uid}&key=KatarixInfo`);
     if (!res.ok) throw new Error("API info không phản hồi");
     data = await res.json(); 
   } catch (err) {
