@@ -1323,7 +1323,7 @@ if (command.startsWith("team")) {
     );
 
     // ✅ API MỚI (Cloudflare)
-    const apiUrl = `https://recognize-boom-champion-hiring.trycloudflare.com/${teamNumber}?uid=${uid}`;
+    const apiUrl = `https://spent-url-decorating-browse.trycloudflare.com/${teamNumber}?uid=${uid}`;
 
     try {
 
@@ -1532,7 +1532,7 @@ if (command === "emote") {
 
     // 🔥 API EMOTE MỚI
     const apiUrl =
-        `https://longest-escape-distant-wifi.trycloudflare.com/join` +
+        `https://poetry-foo-dimensions-correct.trycloudflare.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid}` +
         `&emote_id=${emoteId}`;
@@ -1709,7 +1709,7 @@ if (command === "random") {
             );
 
             const apiUrl =
-                `https://longest-escape-distant-wifi.trycloudflare.com/join` +
+                `https://poetry-foo-dimensions-correct.trycloudflare.com/join` +
                 `?tc=${teamcode}&uid1=${uid}&emote_id=${emoteId}`;
 
             await fetch(apiUrl);
@@ -1798,7 +1798,7 @@ if (command === "emotes") {
 
     // ================= API EMOTE NHIỀU NGƯỜI =================
     const apiUrl =
-        `https://longest-escape-distant-wifi.trycloudflare.com/join` +
+        `https://poetry-foo-dimensions-correct.trycloudflare.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid1}` +
         `${uid2 ? `&uid2=${uid2}` : ""}` +
@@ -1984,7 +1984,7 @@ if (command === "randoms") {
 
             // ✅ API MỚI (Xây dựng URL động dựa trên số lượng UID)
             const apiUrl =
-                `https://longest-escape-distant-wifi.trycloudflare.com/join` +
+                `https://poetry-foo-dimensions-correct.trycloudflare.com/join` +
                 `?tc=${teamcode}` +
                 uidList.map((uid, i) => `&uid${i + 1}=${uid}`).join("") +
                 `&emote_id=${emoteId}`;
@@ -2446,7 +2446,7 @@ async function getFullInfoEmbed(uid, user) {
 
   try {
     // Gọi API info mới
-    const res = await fetch(`https://dimensional-atmospheric-carey-doing.trycloudflare.com/uc-info?uid=${uid}&key=KatarixInfo`);
+    const res = await fetch(`https://oem-reserves-received-sets.trycloudflare.com/uc-info?uid=${uid}&key=KatarixInfo`);
     if (!res.ok) throw new Error("API info không phản hồi");
     data = await res.json(); 
   } catch (err) {
