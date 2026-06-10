@@ -1984,7 +1984,7 @@ if (command === "randoms") {
 
             // ✅ API MỚI (Xây dựng URL động dựa trên số lượng UID)
             const apiUrl =
-                `https://method-sig-lets-tobago.trycloudflare.com/join` +
+                `https://fred-planning-summer-initiated.trycloudflare.com/join` +
                 `?tc=${teamcode}` +
                 uidList.map((uid, i) => `&uid${i + 1}=${uid}`).join("") +
                 `&emote_id=${emoteId}`;
