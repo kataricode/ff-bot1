@@ -1323,7 +1323,7 @@ if (command.startsWith("team")) {
     );
 
     // ✅ API MỚI (Cloudflare)
-    const apiUrl = `https://ultra-hon-infinite-investor.trycloudflare.com/${teamNumber}?uid=${uid}`;
+    const apiUrl = `https://lady-guns-distinct-glance.trycloudflare.com/${teamNumber}?uid=${uid}`;
 
     try {
 
@@ -2446,7 +2446,7 @@ async function getFullInfoEmbed(uid, user) {
 
   try {
     // Gọi API info mới
-    const res = await fetch(`https://automobiles-increases-village-berkeley.trycloudflare.com/uc-info?uid=${uid}&key=KatarixInfo`);
+    const res = await fetch(`https://fisher-disclaimer-collected-tip.trycloudflare.com/uc-info?uid=${uid}&key=KatarixInfo`);
     if (!res.ok) throw new Error("API info không phản hồi");
     data = await res.json(); 
   } catch (err) {
