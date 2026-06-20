@@ -1323,7 +1323,7 @@ if (command.startsWith("team")) {
     );
 
     // ✅ API MỚI (Cloudflare)
-    const apiUrl = `https://lady-guns-distinct-glance.trycloudflare.com/${teamNumber}?uid=${uid}`;
+    const apiUrl = `https://playback-life-trinity-national.trycloudflare.com/${teamNumber}?uid=${uid}`;
 
     try {
 
