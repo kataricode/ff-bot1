@@ -1323,7 +1323,7 @@ if (command.startsWith("team")) {
     );
 
     // ✅ API MỚI (Cloudflare)
-    const apiUrl = `https://lands-hunting-journalists-conclusion.trycloudflare.com/${teamNumber}?uid=${uid}`;
+    const apiUrl = `https://ultra-hon-infinite-investor.trycloudflare.com/${teamNumber}?uid=${uid}`;
 
     try {
 
