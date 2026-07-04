@@ -2446,7 +2446,7 @@ async function getFullInfoEmbed(uid, user) {
 
   try {
     // Gọi API info mới
-    const res = await fetch(`https://fisher-disclaimer-collected-tip.trycloudflare.com/uc-info?uid=${uid}&key=KatarixInfo`);
+    const res = await fetch(`https://laptops-cms-bite-delaware.trycloudflare.com/uc-info?uid=${uid}&key=KatarixInfo`);
     if (!res.ok) throw new Error("API info không phản hồi");
     data = await res.json(); 
   } catch (err) {
