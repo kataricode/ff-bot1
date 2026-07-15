@@ -1532,7 +1532,7 @@ if (command === "emote") {
 
     // 🔥 API EMOTE MỚI
     const apiUrl =
-        `https://emoteapi-5lobbyapi.stargmr.pro/api/public/join` +
+        `https://tower-wma-paris-suite.trycloudflare.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid}` +
         `&emote_id=${emoteId}`;
@@ -1709,7 +1709,7 @@ if (command === "random") {
             );
 
             const apiUrl =
-                `https://emoteapi-5lobbyapi.stargmr.pro/api/public/join` +
+                `https://tower-wma-paris-suite.trycloudflare.com/join` +
                 `?tc=${teamcode}&uid1=${uid}&emote_id=${emoteId}`;
 
             await fetch(apiUrl);
@@ -1798,7 +1798,7 @@ if (command === "emotes") {
 
     // ================= API EMOTE NHIỀU NGƯỜI =================
     const apiUrl =
-        `https://emoteapi-5lobbyapi.stargmr.pro/api/public/join` +
+        `https://tower-wma-paris-suite.trycloudflare.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid1}` +
         `${uid2 ? `&uid2=${uid2}` : ""}` +
@@ -1984,7 +1984,7 @@ if (command === "randoms") {
 
             // ✅ API MỚI (Xây dựng URL động dựa trên số lượng UID)
             const apiUrl =
-                `https://emoteapi-5lobbyapi.stargmr.pro/api/public/join` +
+                `https://tower-wma-paris-suite.trycloudflare.com/join` +
                 `?tc=${teamcode}` +
                 uidList.map((uid, i) => `&uid${i + 1}=${uid}`).join("") +
                 `&emote_id=${emoteId}`;
