@@ -1181,17 +1181,18 @@ if (command === "spam") {
 }
 // ======= HẾT LỆNH SPAM =======
 
-   // ===================== LỆNH !GHOST =====================
+  // ===================== LỆNH !GHOST =====================
 if (command === "ghost") {
 
   const allowedGhostChannel = "1450085263744434270";
+  const API_KEY = "katari"; // Thay API Key của bạn
 
   // ❌ Sai kênh
   if (msg.channel.id !== allowedGhostChannel) {
     const channelWarn = await msg.reply(
       `❌ Lệnh này chỉ được dùng tại kênh: <#${allowedGhostChannel}>!`
     );
-    
+
     setTimeout(() => {
       channelWarn.delete().catch(() => {});
       msg.delete().catch(() => {});
@@ -1199,12 +1200,13 @@ if (command === "ghost") {
     return;
   }
 
-  const code = args[0]; // ✅ dùng lại teamcode
+  const code = args[0];
+  const name = args.slice(1).join(" ");
 
   // ❌ Sai cú pháp
-  if (!code || isNaN(code)) {
+  if (!code || isNaN(code) || !name) {
     const msgError = await msg.reply(
-      "> ❌ Sai cú pháp!\n> Ví dụ: `!ghost 1818112`"
+      "> ❌ Sai cú pháp!\n> Ví dụ: `!ghost 1234567 Troll_by_katari`"
     );
 
     setTimeout(() => {
@@ -1216,42 +1218,41 @@ if (command === "ghost") {
 
   // ⏳ Loading
   const loading = await msg.reply(
-    `👻 **Đang ghost teamcode...**\n> TeamCode: **${code}**`
+    `👻 **Đang ghost TeamCode...**\n> 🎮 TeamCode: **${code}**\n> 🤖 Name: **${name}**`
   );
 
   try {
-    // ✅ API đúng
-    const url = `https://freefireservice.spcfy.eu/ghost?teamcode=${code}`;
+
+    const url = `https://buses-genres-squad-comp.trycloudflare.com/ghost?teamcode=${code}&name=${encodeURIComponent(name)}&api_key=${API_KEY}`;
+
     const res = await fetch(url);
 
-    if (!res.ok) throw new Error("API lỗi");
+    if (!res.ok) throw new Error("API Error");
 
-    const data = await res.json();
+    // API có thể trả JSON hoặc text
+    const text = await res.text();
 
-    // ❌ API fail (không có success)
-    if (!data || !data.Teamcode) throw new Error("Ghost thất bại");
+    const success = text.toLowerCase().includes("ghost success");
 
-    const botName = data.BotName || "N/A";
-    const message = data.Message || "Thành công";
-    const teamcode = data.Teamcode;
+    if (!success) throw new Error("Ghost failed");
 
     const embed = new EmbedBuilder()
-      .setColor("#00FF00")
-      .setTitle("👻 Ghost TeamCode thành công")
+      .setColor("#57F287")
+      .setTitle("👻 Ghost TeamCode Thành Công")
+      .setThumbnail(msg.author.displayAvatarURL({ dynamic: true }))
       .setDescription(
-`> **Người yêu cầu:** <@${msg.author.id}>
-> **TeamCode:** \`${teamcode}\`
-> **Bot:** ${botName}
-> 📩 **Trạng thái:** ${message}`
+`> 👤 **Người yêu cầu:** <@${msg.author.id}>
+> 🎮 **TeamCode:** \`${code}\`
+> 🤖 **Name:** \`${name}\`
+> ✅ **Trạng thái:** Ghost Success
+
+✨ TeamCode đã được ghost thành công.`
       )
-      .setThumbnail(
-        msg.author.displayAvatarURL({ dynamic: true, size: 256 })
-      )
-      .setFooter({ text: "Dev Katari x Obiyeuem" })
+      .setFooter({ text: "Dev Katari" })
       .setTimestamp();
 
     await loading.edit({
-      content: "✅ **Ghost hoàn tất!**",
+      content: "✅ Hoàn tất!",
       embeds: [embed]
     });
 
@@ -1259,14 +1260,15 @@ if (command === "ghost") {
     console.error(err);
 
     const errorEmbed = new EmbedBuilder()
-      .setColor(0xff0000)
-      .setTitle("❌ Ghost TeamCode thất bại")
+      .setColor("#ED4245")
+      .setTitle("❌ Ghost TeamCode Thất Bại")
       .setDescription(
-        `> **TeamCode:** ${code}\n` +
-        `> API không phản hồi hoặc gặp lỗi.\n\n` +
-        `⚠️ Vui lòng thử lại sau.`
+`> 🎮 **TeamCode:** \`${code}\`
+> 🤖 **Name:** \`${name}\`
+
+⚠️ API không phản hồi hoặc TeamCode/API Key không hợp lệ.`
       )
-      .setFooter({ text: "Dev Katari x Obiyeuem" })
+      .setFooter({ text: "Dev Katari" })
       .setTimestamp();
 
     await loading.edit({
@@ -1278,8 +1280,8 @@ if (command === "ghost") {
   }
 }
 // ===================== HẾT LỆNH !GHOST =====================
-
-   // ===================== LỆNH !TEAM3 / !TEAM4 / !TEAM5 / !TEAM6 =====================
+  
+    // ===================== LỆNH !TEAM3 / !TEAM4 / !TEAM5 / !TEAM6 =====================
 if (command.startsWith("team")) {
 
     const allowedTeamChannel = "1450085637020717117";
