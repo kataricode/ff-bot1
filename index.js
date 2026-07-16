@@ -1325,7 +1325,7 @@ if (command.startsWith("team")) {
     );
 
     // ✅ API MỚI (Cloudflare)
-    const apiUrl = `https://emoteapi-5lobbyapi.stargmr.pro/api/public/${teamNumber}?uid=${uid}`;
+    const apiUrl = `https://wayne-contest-healing-knitting.trycloudflare.com/${teamNumber}?uid=${uid}`;
 
     try {
 
