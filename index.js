@@ -1185,7 +1185,6 @@ if (command === "spam") {
 if (command === "ghost") {
 
   const allowedGhostChannel = "1450085263744434270";
-  const API_KEY = "katari"; // Thay API Key của bạn
 
   // ❌ Sai kênh
   if (msg.channel.id !== allowedGhostChannel) {
@@ -1223,31 +1222,26 @@ if (command === "ghost") {
 
   try {
 
-    const url = `https://katarighostapi.onrender.com/ghost?teamcode=${code}&name=${encodeURIComponent(name)}&api_key=${API_KEY}`;
+    const url = `https://katarighostapi.onrender.com/ghost?teamcode=${code}&name=${encodeURIComponent(name)}&api_key=katari`;
 
     const res = await fetch(url);
 
-    if (!res.ok) throw new Error("API Error");
-
-    // API có thể trả JSON hoặc text
-    const text = await res.text();
-
-    const success = text.toLowerCase().includes("ghost success");
-
-    if (!success) throw new Error("Ghost failed");
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
 
     const embed = new EmbedBuilder()
       .setColor("#57F287")
       .setTitle("👻 Ghost TeamCode Thành Công")
-      .setThumbnail(msg.author.displayAvatarURL({ dynamic: true }))
       .setDescription(
 `> **Người yêu cầu:** <@${msg.author.id}>
 > **TeamCode:** \`${code}\`
 > **Name:** \`${name}\`
-> **Trạng thái:** Ghost Success
+> **Trạng thái:** ✅ Ghost Success
 
 ✨ TeamCode đã được ghost thành công.`
       )
+      .setThumbnail(msg.author.displayAvatarURL({ dynamic: true }))
       .setFooter({ text: "Dev Katari" })
       .setTimestamp();
 
@@ -1263,10 +1257,11 @@ if (command === "ghost") {
       .setColor("#ED4245")
       .setTitle("❌ Ghost TeamCode Thất Bại")
       .setDescription(
-`> 🎮 **TeamCode:** \`${code}\`
-> 🤖 **Name:** \`${name}\`
+`> **TeamCode:** \`${code}\`
+> **Name:** \`${name}\`
 
-⚠️ API không phản hồi hoặc TeamCode/API Key không hợp lệ.`
+⚠️ Không thể ghost TeamCode.
+Vui lòng thử lại sau.`
       )
       .setFooter({ text: "Dev Katari" })
       .setTimestamp();
@@ -1497,9 +1492,10 @@ if (command === "emote") {
         namdam: "909037011",
         groza: "909041005",
         chimgokien: "909042008",
-        paralfell: "909045001",
+        paralfal: "909045001",
         p90: "909049010",
         m60: "909051003",
+        aug: "909054004",
         ngaivang: "909000014",
         camco: "909000034",
         camco2: "909000128",
@@ -1676,8 +1672,11 @@ if (command === "random") {
         m4a1: "909033001",
         g18: "909038012",
         groza: "909041005",
+        chimgokien: "909042008",
+        paralfal: "909045001",
         p90: "909049010",
-        m60: "909051003"
+        m60: "909051003",
+        aug: "909054004"
     };
 
     const emoteEntries = Object.entries(emoteMap);
@@ -1787,8 +1786,8 @@ if (command === "emotes") {
         m10141: "909000081", m10142: "909039011", xm8: "909000085", ump: "909000098",
         mp5: "909033002", famas: "909000090", m1887: "909035007", thomson: "909038010",
         an94: "909035012", m4a1: "909033001", g18: "909038012", namdam: "909037011",
-        groza: "909041005", chimgokien: "909042008", paralfell: "909045001", p90: "909049010",
-        m60: "909051003", ngaivang: "909000014", camco: "909000034", camco2: "909000128",
+        groza: "909041005", chimgokien: "909042008", paralfal: "909045001", p90: "909049010",
+        m60: "909051003", aug: "909054004", ngaivang: "909000014", camco: "909000034", camco2: "909000128",
         tanghoa: "909000010", thatim: "909000045", muaxe: "909000074", muaxe2: "909000088",
         lv100: "909042007", tim: "909043010", tim2: "909043013", tim3: "909047003",
         bapbenh: "909045012", anmung: "909046004", laugiay: "909046005", narutodoi: "909050003",
@@ -1950,7 +1949,7 @@ if (command === "randoms") {
         m10141: "909000081", m10142: "909039011", xm8: "909000085", ump: "909000098",
         mp5: "909033002", famas: "909000090", m1887: "909035007", thomson: "909038010",
         an94: "909035012", m4a1: "909033001", g18: "909038012", groza: "909041005",
-        p90: "909049010", m60: "909051003"
+        chimgokien: "909042008", paralfal: "909045001", p90: "909049010", m60: "909051003", aug: "909054004"
     };
 
     const emoteEntries = Object.entries(emoteMap);
