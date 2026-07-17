@@ -1223,7 +1223,7 @@ if (command === "ghost") {
 
   try {
 
-    const url = `https://buses-genres-squad-comp.trycloudflare.com/ghost?teamcode=${code}&name=${encodeURIComponent(name)}&api_key=${API_KEY}`;
+    const url = `https://katarighostapi.onrender.com/ghost?teamcode=${code}&name=${encodeURIComponent(name)}&api_key=${API_KEY}`;
 
     const res = await fetch(url);
 
@@ -1241,10 +1241,10 @@ if (command === "ghost") {
       .setTitle("👻 Ghost TeamCode Thành Công")
       .setThumbnail(msg.author.displayAvatarURL({ dynamic: true }))
       .setDescription(
-`> 👤 **Người yêu cầu:** <@${msg.author.id}>
-> 🎮 **TeamCode:** \`${code}\`
-> 🤖 **Name:** \`${name}\`
-> ✅ **Trạng thái:** Ghost Success
+`> **Người yêu cầu:** <@${msg.author.id}>
+> **TeamCode:** \`${code}\`
+> **Name:** \`${name}\`
+> **Trạng thái:** Ghost Success
 
 ✨ TeamCode đã được ghost thành công.`
       )
@@ -1325,7 +1325,7 @@ if (command.startsWith("team")) {
     );
 
     // ✅ API MỚI (Cloudflare)
-    const apiUrl = `https://wayne-contest-healing-knitting.trycloudflare.com/${teamNumber}?uid=${uid}`;
+    const apiUrl = `https://team5-6api3.onrender.com/${teamNumber}?uid=${uid}`;
 
     try {
 
@@ -1534,7 +1534,7 @@ if (command === "emote") {
 
     // 🔥 API EMOTE MỚI
     const apiUrl =
-        `https://tower-wma-paris-suite.trycloudflare.com/join` +
+        `https://katariemoteapi.onrender.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid}` +
         `&emote_id=${emoteId}`;
@@ -1711,7 +1711,7 @@ if (command === "random") {
             );
 
             const apiUrl =
-                `https://tower-wma-paris-suite.trycloudflare.com/join` +
+                `https://katariemoteapi.onrender.com/join` +
                 `?tc=${teamcode}&uid1=${uid}&emote_id=${emoteId}`;
 
             await fetch(apiUrl);
@@ -1800,7 +1800,7 @@ if (command === "emotes") {
 
     // ================= API EMOTE NHIỀU NGƯỜI =================
     const apiUrl =
-        `https://tower-wma-paris-suite.trycloudflare.com/join` +
+        `https://katariemoteapi.onrender.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid1}` +
         `${uid2 ? `&uid2=${uid2}` : ""}` +
@@ -1986,7 +1986,7 @@ if (command === "randoms") {
 
             // ✅ API MỚI (Xây dựng URL động dựa trên số lượng UID)
             const apiUrl =
-                `https://tower-wma-paris-suite.trycloudflare.com/join` +
+                `https://katariemoteapi.onrender.com/join` +
                 `?tc=${teamcode}` +
                 uidList.map((uid, i) => `&uid${i + 1}=${uid}`).join("") +
                 `&emote_id=${emoteId}`;
