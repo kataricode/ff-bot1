@@ -672,21 +672,25 @@ if (command === "info") {
 if (command === "check") {
   
   // ID kênh được phép sử dụng lệnh check ban
-  const allowedCheckChannel = "1450084107051733133";
+  const allowedChannels = [
+  "1450085263744434270", // Server 1
+  "1510698085305553020"  // Server 2
+];
 
-  // Kiểm tra xem có đúng kênh cho phép không
-  if (msg.channel.id !== allowedCheckChannel) {
-    const channelWarn = await msg.reply(
-      `❌ Lệnh này chỉ được dùng tại kênh: <#${allowedCheckChannel}>!`
-    );
-    
-    // Tự động xóa tin nhắn cảnh báo và lệnh sai sau 5 giây
-    setTimeout(() => {
-      channelWarn.delete().catch(() => {});
-      msg.delete().catch(() => {});
-    }, 5000);
-    return; // Dừng thực hiện lệnh
-  }
+if (!allowedChannels.includes(msg.channel.id)) {
+  const channelWarn = await msg.reply(
+    `❌ Lệnh này chỉ được dùng tại: ${allowedChannels
+      .map(id => `<#${id}>`)
+      .join(", ")}`
+  );
+
+  setTimeout(() => {
+    channelWarn.delete().catch(() => {});
+    msg.delete().catch(() => {});
+  }, 5000);
+
+  return;
+}
 
   const uid = args[0];
   if (!uid || isNaN(uid)) return msg.reply("❌ UID không hợp lệ!");
@@ -1184,36 +1188,25 @@ if (command === "spam") {
   // ===================== LỆNH !GHOST =====================
 if (command === "ghost") {
 
-  const allowedGhostChannel = "1450085263744434270";
+  const allowedGhostChannels = [
+  "1450085263744434270",
+  "1528287911949373531"
+];
 
-  // ❌ Sai kênh
-  if (msg.channel.id !== allowedGhostChannel) {
-    const channelWarn = await msg.reply(
-      `❌ Lệnh này chỉ được dùng tại kênh: <#${allowedGhostChannel}>!`
-    );
+// ❌ Sai kênh
+if (!allowedGhostChannels.includes(msg.channel.id)) {
+  const channelWarn = await msg.reply(
+    `❌ Lệnh này chỉ được dùng tại: ${allowedGhostChannels
+      .map(id => `<#${id}>`)
+      .join(", ")}`
+  );
 
-    setTimeout(() => {
-      channelWarn.delete().catch(() => {});
-      msg.delete().catch(() => {});
-    }, 5000);
-    return;
-  }
-
-  const code = args[0];
-  const name = args.slice(1).join(" ");
-
-  // ❌ Sai cú pháp
-  if (!code || isNaN(code) || !name) {
-    const msgError = await msg.reply(
-      "> ❌ Sai cú pháp!\n> Ví dụ: `!ghost 1234567 Troll_by_katari`"
-    );
-
-    setTimeout(() => {
-      msgError.delete().catch(() => {});
-      msg.delete().catch(() => {});
-    }, 5000);
-    return;
-  }
+  setTimeout(() => {
+    channelWarn.delete().catch(() => {});
+    msg.delete().catch(() => {});
+  }, 5000);
+  return;
+}
 
   // ⏳ Loading
   const loading = await msg.reply(
@@ -1283,16 +1276,25 @@ if (command.startsWith("team")) {
 
     // ❌ Sai kênh
     if (msg.channel.id !== allowedTeamChannel) {
-        const channelWarn = await msg.reply(
-            `❌ Lệnh tạo team chỉ được dùng tại kênh: <#${allowedTeamChannel}>!`
-        );
-        
-        setTimeout(() => {
-            channelWarn.delete().catch(() => {});
-            msg.delete().catch(() => {});
-        }, 5000);
-        return;
-    }
+        const allowedChannels = [
+  "1450085263744434270", // Server 1
+  "1510699864588030033"  // Server 2
+];
+
+if (!allowedChannels.includes(msg.channel.id)) {
+  const channelWarn = await msg.reply(
+    `❌ Lệnh này chỉ được dùng tại: ${allowedChannels
+      .map(id => `<#${id}>`)
+      .join(", ")}`
+  );
+
+  setTimeout(() => {
+    channelWarn.delete().catch(() => {});
+    msg.delete().catch(() => {});
+  }, 5000);
+
+  return;
+}
 
     const teamNumber = command.replace("team", "");
     const uid = args[0];
@@ -1439,21 +1441,25 @@ if (command === "lag") { // loại bỏ "!" ở đây
 if (command === "emote") {
 
     // ID kênh được phép sử dụng lệnh emote
-    const allowedEmoteChannel = "1450085765764747420";
+    const allowedChannels = [
+  "1450085263744434270", // Server 1
+  "1510698679257010187"  // Server 2
+];
 
-    // 1. Kiểm tra xem có đúng kênh cho phép không
-    if (msg.channel.id !== allowedEmoteChannel) {
-        const channelWarn = await msg.reply(
-            `❌ Lệnh emote chỉ được dùng tại kênh: <#${allowedEmoteChannel}>!`
-        );
-        
-        // Tự động xóa cảnh báo và lệnh sai sau 5 giây
-        setTimeout(() => {
-            channelWarn.delete().catch(() => {});
-            msg.delete().catch(() => {});
-        }, 5000);
-        return; // Dừng thực hiện lệnh
-    }
+if (!allowedChannels.includes(msg.channel.id)) {
+  const channelWarn = await msg.reply(
+    `❌ Lệnh này chỉ được dùng tại: ${allowedChannels
+      .map(id => `<#${id}>`)
+      .join(", ")}`
+  );
+
+  setTimeout(() => {
+    channelWarn.delete().catch(() => {});
+    msg.delete().catch(() => {});
+  }, 5000);
+
+  return;
+}
 
     const teamcode = args[0];
     const uid = args[1];
@@ -1579,21 +1585,25 @@ if (command === "emote") {
 if (command === "random") {
 
     // ID kênh được phép sử dụng lệnh random (chung kênh với emote)
-    const allowedRandomChannel = "1450085765764747420";
+    const allowedChannels = [
+  "1450085263744434270", // Server 1
+  "1510698679257010187"  // Server 2
+];
 
-    // 1. Kiểm tra xem có đúng kênh cho phép không
-    if (msg.channel.id !== allowedRandomChannel) {
-        const channelWarn = await msg.reply(
-            `❌ Lệnh auto emote chỉ được dùng tại kênh: <#${allowedRandomChannel}>!`
-        );
-        
-        // Tự động xóa cảnh báo và lệnh sai sau 5 giây
-        setTimeout(() => {
-            channelWarn.delete().catch(() => {});
-            msg.delete().catch(() => {});
-        }, 5000);
-        return; // Dừng thực hiện lệnh
-    }
+if (!allowedChannels.includes(msg.channel.id)) {
+  const channelWarn = await msg.reply(
+    `❌ Lệnh này chỉ được dùng tại: ${allowedChannels
+      .map(id => `<#${id}>`)
+      .join(", ")}`
+  );
+
+  setTimeout(() => {
+    channelWarn.delete().catch(() => {});
+    msg.delete().catch(() => {});
+  }, 5000);
+
+  return;
+}
 
     // ================= STOP =================
     if (args[0] === "stop") {
@@ -1739,21 +1749,25 @@ if (command === "random") {
 if (command === "emotes") {
 
     // ID kênh được phép sử dụng lệnh emotes (chung kênh với emote và random)
-    const allowedEmotesChannel = "1450085765764747420";
+    const allowedChannels = [
+  "1450085263744434270", // Server 1
+  "1510698679257010187"  // Server 2
+];
 
-    // 1. Kiểm tra xem có đúng kênh cho phép không
-    if (msg.channel.id !== allowedEmotesChannel) {
-        const channelWarn = await msg.reply(
-            `❌ Lệnh emote nhiều người chỉ được dùng tại kênh: <#${allowedEmotesChannel}>!`
-        );
-        
-        // Tự động xóa cảnh báo và lệnh sai sau 5 giây
-        setTimeout(() => {
-            channelWarn.delete().catch(() => {});
-            msg.delete().catch(() => {});
-        }, 5000);
-        return; // Dừng thực hiện lệnh
-    }
+if (!allowedChannels.includes(msg.channel.id)) {
+  const channelWarn = await msg.reply(
+    `❌ Lệnh này chỉ được dùng tại: ${allowedChannels
+      .map(id => `<#${id}>`)
+      .join(", ")}`
+  );
+
+  setTimeout(() => {
+    channelWarn.delete().catch(() => {});
+    msg.delete().catch(() => {});
+  }, 5000);
+
+  return;
+}
 
     const teamcode = args[0];
     const uid1 = args[1];
@@ -1864,21 +1878,25 @@ if (command === "emotes") {
 if (command === "randoms") {
 
     // ID kênh được phép sử dụng (Dùng chung với các lệnh emote khác)
-    const allowedRandomsChannel = "1450085765764747420";
+    const allowedChannels = [
+  "1450085263744434270", // Server 1
+  "1510698679257010187"  // Server 2
+];
 
-    // 1. Kiểm tra xem có đúng kênh cho phép không
-    if (msg.channel.id !== allowedRandomsChannel) {
-        const channelWarn = await msg.reply(
-            `❌ Lệnh auto emote nhiều người chỉ được dùng tại kênh: <#${allowedRandomsChannel}>!`
-        );
-        
-        // Tự động xóa cảnh báo và lệnh sai sau 5 giây
-        setTimeout(() => {
-            channelWarn.delete().catch(() => {});
-            msg.delete().catch(() => {});
-        }, 5000);
-        return; // Dừng thực hiện lệnh
-    }
+if (!allowedChannels.includes(msg.channel.id)) {
+  const channelWarn = await msg.reply(
+    `❌ Lệnh này chỉ được dùng tại: ${allowedChannels
+      .map(id => `<#${id}>`)
+      .join(", ")}`
+  );
+
+  setTimeout(() => {
+    channelWarn.delete().catch(() => {});
+    msg.delete().catch(() => {});
+  }, 5000);
+
+  return;
+}
 
     // ================= STOP =================
     if (args[0] === "stop") {
