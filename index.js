@@ -673,7 +673,7 @@ if (command === "check") {
   
   // ID kênh được phép sử dụng lệnh check ban
   const allowedChannels = [
-  "1450085263744434270", // Server 1
+  "1450084107051733133", // Server 1
   "1510698085305553020"  // Server 2
 ];
 
@@ -1292,7 +1292,6 @@ if (command.startsWith("team")) {
 
     const allowedTeamChannels = [
         "1450085637020717117",
-        "1450085263744434270",
         "1510699864588030033"
     ];
 
@@ -1458,7 +1457,7 @@ if (command === "emote") {
 
     // ID kênh được phép sử dụng lệnh emote
     const allowedChannels = [
-  "1450085263744434270", // Server 1
+  "1450085765764747420", // Server 1
   "1510698679257010187"  // Server 2
 ];
 
