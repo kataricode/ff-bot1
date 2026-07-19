@@ -1602,7 +1602,7 @@ if (command === "random") {
 
     // ID kênh được phép sử dụng lệnh random (chung kênh với emote)
     const allowedChannels = [
-  "1450085263744434270", // Server 1
+  "1450085765764747420", // Server 1
   "1510698679257010187"  // Server 2
 ];
 
@@ -1766,7 +1766,7 @@ if (command === "emotes") {
 
     // ID kênh được phép sử dụng lệnh emotes (chung kênh với emote và random)
     const allowedChannels = [
-  "1450085263744434270", // Server 1
+  "1450085765764747420", // Server 1
   "1510698679257010187"  // Server 2
 ];
 
@@ -1895,7 +1895,7 @@ if (command === "randoms") {
 
     // ID kênh được phép sử dụng (Dùng chung với các lệnh emote khác)
     const allowedChannels = [
-  "1450085263744434270", // Server 1
+  "1450085765764747420", // Server 1
   "1510698679257010187"  // Server 2
 ];
 
