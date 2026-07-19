@@ -1272,29 +1272,27 @@ Vui lòng thử lại sau.`
     // ===================== LỆNH !TEAM3 / !TEAM4 / !TEAM5 / !TEAM6 =====================
 if (command.startsWith("team")) {
 
-    const allowedTeamChannel = "1450085637020717117";
+    const allowedTeamChannels = [
+        "1450085637020717117",
+        "1450085263744434270",
+        "1510699864588030033"
+    ];
 
     // ❌ Sai kênh
-    if (msg.channel.id !== allowedTeamChannel) {
-        const allowedChannels = [
-  "1450085263744434270", // Server 1
-  "1510699864588030033"  // Server 2
-];
+    if (!allowedTeamChannels.includes(msg.channel.id)) {
+        const channelWarn = await msg.reply(
+            `❌ Lệnh này chỉ được dùng tại: ${allowedTeamChannels
+                .map(id => `<#${id}>`)
+                .join(", ")}`
+        );
 
-if (!allowedChannels.includes(msg.channel.id)) {
-  const channelWarn = await msg.reply(
-    `❌ Lệnh này chỉ được dùng tại: ${allowedChannels
-      .map(id => `<#${id}>`)
-      .join(", ")}`
-  );
+        setTimeout(() => {
+            channelWarn.delete().catch(() => {});
+            msg.delete().catch(() => {});
+        }, 5000);
 
-  setTimeout(() => {
-    channelWarn.delete().catch(() => {});
-    msg.delete().catch(() => {});
-  }, 5000);
-
-  return;
-}
+        return;
+    }
 
     const teamNumber = command.replace("team", "");
     const uid = args[0];
