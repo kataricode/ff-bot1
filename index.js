@@ -1208,6 +1208,24 @@ if (!allowedGhostChannels.includes(msg.channel.id)) {
   return;
 }
 
+// ✅ Lấy dữ liệu lệnh
+const code = args[0];
+const name = args.slice(1).join(" ");
+
+// ❌ Sai cú pháp
+if (!code || isNaN(code) || !name) {
+  const msgError = await msg.reply(
+    "> ❌ Sai cú pháp!\n> Ví dụ: `!ghost 1234567 Troll_by_katari`"
+  );
+
+  setTimeout(() => {
+    msgError.delete().catch(() => {});
+    msg.delete().catch(() => {});
+  }, 5000);
+
+  return;
+}
+
   // ⏳ Loading
   const loading = await msg.reply(
     `👻 **Đang ghost TeamCode...**\n> 🎮 TeamCode: **${code}**\n> 🤖 Name: **${name}**`
