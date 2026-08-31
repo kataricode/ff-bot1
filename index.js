@@ -515,27 +515,28 @@ if (command === "katari") {
 
   // ======= LỆNH LIKE =======
 if (command === "like") {
-  
+
   // ID kênh được phép sử dụng lệnh like
   const allowedChannelId = "1450083680977555523";
 
-  // Kiểm tra xem có đúng kênh không
+  // Kiểm tra đúng kênh
   if (msg.channel.id !== allowedChannelId) {
     const channelWarn = await msg.reply(
       `❌ Lệnh này chỉ được dùng tại kênh <#${allowedChannelId}>!`
     );
-    
+
     setTimeout(() => {
       channelWarn.delete().catch(() => {});
       msg.delete().catch(() => {});
     }, 5000);
-    return; 
+
+    return;
   }
 
   const uid = args[0];
 
   // Kiểm tra cú pháp UID
-  if (!uid || isNaN(uid)) {
+  if (!uid || !/^\d+$/.test(uid)) {
     const warn = await msg.reply(
       "❌ Sai cú pháp!\n\nVí dụ:\n```bash\n!like 12345678\n```"
     );
@@ -544,6 +545,41 @@ if (command === "like") {
       warn.delete().catch(() => {});
       msg.delete().catch(() => {});
     }, 3000);
+
+    return;
+  }
+
+  // ==================================================
+  // GIỚI HẠN MỖI USER 1 LẦN / NGÀY
+  // ==================================================
+
+  const userId = msg.author.id;
+
+  // Lưu thời gian sử dụng like
+  if (!global.likeDailyUsers) {
+    global.likeDailyUsers = new Map();
+  }
+
+  const now = new Date();
+
+  // Ngày hiện tại theo giờ Việt Nam
+  const today = now.toLocaleDateString("en-CA", {
+    timeZone: "Asia/Ho_Chi_Minh"
+  });
+
+  const lastUsed = global.likeDailyUsers.get(userId);
+
+  if (lastUsed === today) {
+    const warn = await msg.reply(
+      "⏳ Bạn đã sử dụng lệnh **!like** hôm nay rồi!\n\n" +
+      "🔄 Vui lòng quay lại vào ngày mai để sử dụng tiếp."
+    );
+
+    setTimeout(() => {
+      warn.delete().catch(() => {});
+      msg.delete().catch(() => {});
+    }, 5000);
+
     return;
   }
 
@@ -552,37 +588,78 @@ if (command === "like") {
   );
 
   try {
-    const apiUrl = `https://ff.garena.cloud/like?uid=${uid}&server=vn&key=FREE-FIRE-LIKE-API`;
+
+    // ==================================================
+    // API LIKE MỚI
+    // ==================================================
+
+    const apiUrl =
+      `https://silent-like-shop-api-production.up.railway.app/like` +
+      `?uid=${encodeURIComponent(uid)}` +
+      `&server_name=VN` +
+      `&key=SILENT-OP`;
 
     const res = await fetch(apiUrl);
+
+    if (!res.ok) {
+      throw new Error(`API HTTP Error: ${res.status}`);
+    }
+
     const data = await res.json();
 
-    if (data.success === 1 && data.status === true) {
-      const r = data.response;
+    console.log("LIKE API RESPONSE:", data);
+
+    // API mới trả về dạng:
+    // [
+    //   {
+    //     LikesGivenByAPI: 45,
+    //     LikesafterCommand: 7912,
+    //     LikesbeforeCommand: 7867,
+    //     PlayerNickname: "...",
+    //     PlayerRegion: "VN",
+    //     UID: 1089992224,
+    //     status: 1
+    //   }
+    // ]
+
+    const r = Array.isArray(data) ? data[0] : data;
+
+    // Kiểm tra response hợp lệ
+    if (r && r.status === 1) {
 
       const nickname = r.PlayerNickname || "N/A";
-      const level = r.PlayerLevl || "N/A";
-      const region = r.Region || "N/A";
-      const before = r.LikesbeforeCommand || 0;
-      const added = r.LikesGivenByAPI || 0;
-      const after = r.LikesafterCommand || 0;
+      const region = r.PlayerRegion || "N/A";
+      const apiUid = r.UID || uid;
+
+      const before = r.LikesbeforeCommand ?? 0;
+      const added = r.LikesGivenByAPI ?? 0;
+      const after = r.LikesafterCommand ?? 0;
+
+      // Chỉ đánh dấu user đã dùng khi API thành công
+      global.likeDailyUsers.set(userId, today);
 
       const embed = new EmbedBuilder()
         .setTitle("✅ BUFF LIKE THÀNH CÔNG")
         .setColor("Green")
         .setDescription(
 `> **Tên:** ${nickname}
-> **UID:** \`${uid}\`
+> **UID:** \`${apiUid}\`
 > **Khu vực:** ${region}
-> **Cấp độ:** ${level}
 > **Like trước:** ${before}
 > **Like thêm:** +${added}
-> **Like sau:** ${after}`
+> **Like sau:** ${after}
+
+> 🕐 **Bạn đã dùng lượt like hôm nay.**`
         )
         .setThumbnail(
-          msg.author.displayAvatarURL({ dynamic: true, size: 256 })
+          msg.author.displayAvatarURL({
+            dynamic: true,
+            size: 256
+          })
         )
-        .setFooter({ text: "DEVELOPED BY KATARI" })
+        .setFooter({
+          text: "DEVELOPED BY KATARI"
+        })
         .setTimestamp();
 
       await processing.edit({
@@ -591,12 +668,12 @@ if (command === "like") {
       });
 
     } else {
-      // Trường hợp MAX LIKE hoặc API từ chối
+
+      // API từ chối / MAX LIKE / UID lỗi
       const errMsg = await processing.edit(
         "⚠️ UID này đã **MAX LIKE** hoặc API không thể gửi thêm."
       );
 
-      // Xóa tin nhắn lỗi và tin nhắn của người dùng sau 10 giây
       setTimeout(() => {
         errMsg.delete().catch(() => {});
         msg.delete().catch(() => {});
@@ -604,20 +681,21 @@ if (command === "like") {
     }
 
   } catch (err) {
-    console.error(err);
+
+    console.error("LIKE API ERROR:", err);
+
     const errMsg = await processing.edit(
       "❌ Không thể kết nối API Like."
     );
 
-    // Xóa tin nhắn lỗi và tin nhắn của người dùng sau 10 giây
     setTimeout(() => {
       errMsg.delete().catch(() => {});
       msg.delete().catch(() => {});
     }, 5000);
   }
 }
-// ======= HẾT LỆNH LIKE =======
 
+// ======= HẾT LỆNH LIKE =======
 
   // ======= LỆNH INFO =======
 if (command === "info") {
