@@ -1551,7 +1551,7 @@ if (!allowedChannels.includes(msg.channel.id)) {
 
     // 🔥 API EMOTE MỚI
     const apiUrl =
-        `https://brother-albany-webpage-described.trycloudflare.com/join` +
+        `https://later-reached-jefferson-explained.trycloudflare.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid}` +
         `&emote_id=${emoteId}`;
@@ -1735,7 +1735,7 @@ if (!allowedChannels.includes(msg.channel.id)) {
             );
 
             const apiUrl =
-                `https://brother-albany-webpage-described.trycloudflare.com/join` +
+                `https://later-reached-jefferson-explained.trycloudflare.com/join` +
                 `?tc=${teamcode}&uid1=${uid}&emote_id=${emoteId}`;
 
             await fetch(apiUrl);
@@ -1828,7 +1828,7 @@ if (!allowedChannels.includes(msg.channel.id)) {
 
     // ================= API EMOTE NHIỀU NGƯỜI =================
     const apiUrl =
-        `https://brother-albany-webpage-described.trycloudflare.com/join` +
+        `https://later-reached-jefferson-explained.trycloudflare.com/join` +
         `?tc=${teamcode}` +
         `&uid1=${uid1}` +
         `${uid2 ? `&uid2=${uid2}` : ""}` +
@@ -2018,7 +2018,7 @@ if (!allowedChannels.includes(msg.channel.id)) {
 
             // ✅ API MỚI (Xây dựng URL động dựa trên số lượng UID)
             const apiUrl =
-                `https://brother-albany-webpage-described.trycloudflare.com/join` +
+                `https://later-reached-jefferson-explained.trycloudflare.com/join` +
                 `?tc=${teamcode}` +
                 uidList.map((uid, i) => `&uid${i + 1}=${uid}`).join("") +
                 `&emote_id=${emoteId}`;
